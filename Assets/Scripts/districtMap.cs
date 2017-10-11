@@ -10,7 +10,7 @@ public class districtMap : MonoBehaviour {
 	[SerializeField] GameObject cube;
 
 	//the materials that represent the two groups
-	[SerializeField] Material[] colors;
+	[SerializeField] Color[] colors;
 
 	[SerializeField] int numDistricts;
 
@@ -34,7 +34,7 @@ public class districtMap : MonoBehaviour {
 
 	//for user input and UI
 	bool isSelecting = false; //whether or not the mouse is down and you're selecting
-	int currentDistrict = -1; //the district that you're selecting for
+	int currentDistrict = 0; //the district that you're selecting for
 	districtIndicator[] indicators;
 
 	// Use this for initialization
@@ -65,24 +65,35 @@ public class districtMap : MonoBehaviour {
 
 		//mouse input
 		if (Input.GetMouseButtonDown (0)) {
+			//left click
 			isSelecting = true;
-			currentDistrict = (currentDistrict + 1) % numDistricts;
+		}
+		if (Input.GetMouseButtonDown (1)) {
+			//right click
+			currentDistrict = (currentDistrict + 1) % numDistricts;		//the % to keep it looping through the districts and not array out of index
 		}
 		if (isSelecting && Input.GetMouseButton (0)) {
+			//you're holding the mouse down
 			RaycastHit hit = new RaycastHit ();
 			if (Physics.Raycast (Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
+				//you hit a district!
 				GameObject objectHit = hit.transform.gameObject;
-				objectHit.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().color = districtColors[currentDistrict];
+				//check if it was already a district or not
 				int prevDistrict = objectHit.GetComponent<gridSpace> ().getDistrict ();
 				if (prevDistrict != -1) {
+					//it was previously a district, but now it's not gonna be that anymore
+					//so we lower the count
 					districtMakeup [objectHit.GetComponent<gridSpace> ().getGroup ()] [prevDistrict]--;
 				}
-				objectHit.GetComponent<gridSpace> ().setDistrict (currentDistrict);
+				//ok now set the district and increase the count
+				objectHit.GetComponent<gridSpace> ().setDistrict (currentDistrict, districtColors[currentDistrict]);
 				districtMakeup [objectHit.GetComponent<gridSpace> ().getGroup ()] [currentDistrict]++;
 			}
 		}
 		if (Input.GetMouseButtonUp (0)) {
 			isSelecting = false;
+
+			//this is for UI display
 			for (int i = 0; i < numDistricts; i++) {
 				indicators [i].setGroups (districtMakeup [0] [i],districtMakeup [1] [i]);
 			}
@@ -97,9 +108,8 @@ public class districtMap : MonoBehaviour {
 			for (int j = 0; j < cols; j++) {
 				GameObject space = Instantiate (cube, new Vector3(rows*0.5f-i,0,cols*0.5f-j), Quaternion.identity);
 				int g = Random.Range (0, colors.Length);
-				space.GetComponent<MeshRenderer> ().material = colors [g];
-				space.GetComponent<gridSpace> ().setGroup (g);
-				space.GetComponent<gridSpace> ().setDistrict (-1);
+				space.GetComponent<gridSpace> ().setGroup (g, colors[g]);
+				space.GetComponent<gridSpace> ().setDistrict (-1, new Color(0f,0f,0f,0f));
 				gridspaces.Add (space);
 			}
 		}

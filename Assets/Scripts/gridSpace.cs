@@ -7,6 +7,9 @@ public class gridSpace : MonoBehaviour {
 	int district;
 	int party;
 
+	[SerializeField] SpriteRenderer districtSprite;
+	[SerializeField] SpriteRenderer selectorSprite;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -16,14 +19,16 @@ public class gridSpace : MonoBehaviour {
 		
 	}
 
-	public void setGroup(int g){
+	public void setGroup(int g, Color c){
 		party = g;
+		districtSprite.color = c;
 	}public int getGroup(){
 		return party;
 	}
 
-	public void setDistrict(int d){
+	public void setDistrict(int d, Color c){
 		district = d;
+		selectorSprite.color = c;
 	}public int getDistrict(){
 		return district;
 	}
