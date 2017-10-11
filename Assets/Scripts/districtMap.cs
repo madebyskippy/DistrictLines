@@ -33,6 +33,7 @@ public class districtMap : MonoBehaviour {
 	int[][] districtMakeup;
 
 	//for user input and UI
+	bool haveScrolled = false;
 	bool isSelecting = false; //whether or not the mouse is down and you're selecting
 	int currentDistrict = 0; //the district that you're selecting for
 	districtIndicator[] indicators;
@@ -54,6 +55,8 @@ public class districtMap : MonoBehaviour {
 
 		gridspaces = new List<GameObject> ();
 		setup ();
+
+		indicators [0].setActive (true);
 	}
 	
 	// Update is called once per frame
@@ -63,15 +66,28 @@ public class districtMap : MonoBehaviour {
 		}	
 
 
-		//mouse input
+		//mouse input shenenigans of all sorts
 		if (Input.GetMouseButtonDown (0)) {
 			//left click
 			isSelecting = true;
 		}
+
 		if (Input.GetMouseButtonDown (1)) {
 			//right click
-			currentDistrict = (currentDistrict + 1) % numDistricts;		//the % to keep it looping through the districts and not array out of index
+			nextDistrict(true);
 		}
+
+		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
+			if (!haveScrolled) {
+				float scroll = Input.GetAxis ("Mouse ScrollWheel");
+				Debug.Log (scroll);
+				nextDistrict((scroll > 0));
+				haveScrolled = true;
+			}
+		} else {
+			haveScrolled = false;
+		}
+
 		if (isSelecting && Input.GetMouseButton (0)) {
 			//you're holding the mouse down
 			RaycastHit hit = new RaycastHit ();
@@ -90,6 +106,7 @@ public class districtMap : MonoBehaviour {
 				districtMakeup [objectHit.GetComponent<gridSpace> ().getGroup ()] [currentDistrict]++;
 			}
 		}
+
 		if (Input.GetMouseButtonUp (0)) {
 			isSelecting = false;
 
@@ -100,6 +117,19 @@ public class districtMap : MonoBehaviour {
 
 		}
 
+	}
+
+	void nextDistrict(bool isUp){
+		int direction = -1;
+		if (isUp)
+			direction = 1;
+		
+		indicators [currentDistrict].setActive (false);
+		currentDistrict = (currentDistrict + direction) % numDistricts;		//the % to keep it looping through the districts and not array out of index
+		if (currentDistrict < 0) {
+			currentDistrict += numDistricts;
+		}
+		indicators [currentDistrict].setActive (true);
 	}
 
 	//sets up the grid of the map

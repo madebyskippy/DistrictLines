@@ -5,13 +5,16 @@ using UnityEngine.UI;
 
 public class districtIndicator : MonoBehaviour {
 
-	[SerializeField] Image label;
+	[SerializeField] GameObject label;
 	[SerializeField] GameObject[] groups;
+
+	bool isActive;
 
 	// Use this for initialization
 	void Start () {
 		groups [0].transform.localScale = Vector3.zero;
 		groups [1].transform.localScale = Vector3.zero;
+		isActive = false;
 	}
 	
 	// Update is called once per frame
@@ -20,7 +23,16 @@ public class districtIndicator : MonoBehaviour {
 	}
 
 	public void setLabel(Color c){
-		label.color = c;
+		label.GetComponent<Image>().color = c;
+	}
+
+	public void setActive(bool a){
+		isActive = a;
+		if (isActive) {
+			label.transform.localScale = Vector3.one * 1.5f;
+		} else {
+			label.transform.localScale = Vector3.one;
+		}
 	}
 
 	public void setGroups(float levelA, float levelB){
