@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class districtMap : MonoBehaviour {
 
+    [SerializeField] int MAX_POPULATION_DIFFERENCE;
+
 	//each grid space represented by a cube
 	[SerializeField] GameObject cube;
 
@@ -25,7 +27,7 @@ public class districtMap : MonoBehaviour {
 	[SerializeField] Color[] districtColors;
 
 	//list of all the game spaces
-	List<GameObject> gridspaces;
+	List<gridSpace> gridspaces;
     gridSpace[,] gridCoordinates;
 
 	//keeps track of how many people for each group in each district.
@@ -41,6 +43,7 @@ public class districtMap : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        MAX_POPULATION_DIFFERENCE = 4;
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
 		indicators = new districtIndicator[numDistricts];
@@ -54,7 +57,7 @@ public class districtMap : MonoBehaviour {
 			indicators [i] = indicator.GetComponent<districtIndicator>();
 		}
 
-		gridspaces = new List<GameObject> ();
+		gridspaces = new List<gridSpace> ();
         gridCoordinates = new gridSpace[rows,cols];
 		setup ();
 
@@ -74,7 +77,7 @@ public class districtMap : MonoBehaviour {
         return population < 1;
     }
 
-    public int districtTotalPopulation(int districtNumber)
+    public int getDistrictTotalPopulation(int districtNumber)
     {
         // If the district is empty, its population is 0
         if (isDistrictEmpty(districtNumber)) return 0;
@@ -97,7 +100,6 @@ public class districtMap : MonoBehaviour {
         if (isDistrictEmpty(currentDistrict)) return true;
         else
         {
-            Debug.Log(gridSpace.gridPos);
             //  Get the N, S, E, W spaces of the map
             float north     = gridSpace.gridPos.y + 1;
             float south     = gridSpace.gridPos.y - 1;
@@ -127,15 +129,23 @@ public class districtMap : MonoBehaviour {
         }
     }
 
-    private bool populationCheck()
+    private bool populationDistributionIsValid()
     {
-        /*
-                Compare the number of square in each district
-                Check if the difference is between a certian threshold
-         */
-         // Returns the population of a district
-        Debug.Log(districtMakeup[0][currentDistrict] + districtMakeup[1][currentDistrict]);
-        return false;
+        int lowestPopulation = int.MaxValue;
+        int highestPopulation = int.MinValue;
+        for (int i = 0; i < colors.Length; i++)
+        {
+            int population = getDistrictTotalPopulation(i);
+            if(population < lowestPopulation)
+            {
+                lowestPopulation = population;
+            }
+            if(highestPopulation < population)
+            {
+                highestPopulation = population;
+            }
+        }
+        return highestPopulation - lowestPopulation < MAX_POPULATION_DIFFERENCE;
     }
 
 
@@ -167,12 +177,6 @@ public class districtMap : MonoBehaviour {
 		} else {
 			haveScrolled = false;
 		}
-
-        //  Implement rules starting from here
-        //  Rules:
-        //      1:  Continuity -    A district should connect to all its population
-        //      2:  Population -    A district must have roughly the same amount of
-        //                          squares(people) int it
 
         if (isSelecting && Input.GetMouseButton (0)) {
 			//you're holding the mouse down
@@ -212,6 +216,28 @@ public class districtMap : MonoBehaviour {
 
 		}
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            bool allSpacesAssigned = true;
+            for (int i = 0; i < gridspaces.Count; i++)
+            {
+                if(gridspaces[i].getDistrict() == -1)
+                {
+                    Debug.Log("Some people have not been assined a district");
+                    allSpacesAssigned = false;
+                    break;
+                }
+            }
+
+            if(populationDistributionIsValid() && allSpacesAssigned)
+            {
+                Debug.Log("Population Distribution looks pretty good! Now let's vote!");
+            }
+            else
+            {
+                Debug.Log("One district has too many people");
+            }
+        }
 	}
 
 	void nextDistrict(bool isUp){
@@ -231,7 +257,7 @@ public class districtMap : MonoBehaviour {
 	void setup(){
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-                GameObject space = Instantiate (cube, new Vector3(i,0,j), Quaternion.identity);
+                gridSpace space = Instantiate (cube, new Vector3(i,0,j), Quaternion.identity).GetComponent<gridSpace>();
 				int g = Random.Range (0, colors.Length);
 				space.GetComponent<gridSpace> ().setGroup (g, colors[g]);
 				space.GetComponent<gridSpace> ().setDistrict (-1);
