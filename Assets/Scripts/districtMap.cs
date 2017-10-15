@@ -26,6 +26,7 @@ public class districtMap : MonoBehaviour {
 
 	//list of all the game spaces
 	List<GameObject> gridspaces;
+    gridSpace[,] gridCoordinates;
 
 	//keeps track of how many people for each group in each district.
 	//e.g. districtMakeup[0][0] is how many people are in group A in district 1.
@@ -54,18 +55,97 @@ public class districtMap : MonoBehaviour {
 		}
 
 		gridspaces = new List<GameObject> ();
+        gridCoordinates = new gridSpace[rows,cols];
 		setup ();
 
 		indicators [0].setActive (true);
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    public bool isDistrictEmpty(int districtNumber)
+    {
+        //  Add all the members of each party in
+        //  the district we are checking.
+        int population = 0;
+        for (int i = 0; i < colors.Length; i++)
+        {
+            population += districtMakeup[i][districtNumber];
+        }
+        //  If the population is less than 1, the district is empty
+        return population < 1;
+    }
+
+    public int districtTotalPopulation(int districtNumber)
+    {
+        // If the district is empty, its population is 0
+        if (isDistrictEmpty(districtNumber)) return 0;
+        else
+        {
+            //  Otherwise we add all the members of each party
+            //  in the district we are counting to its population
+            int population = 0;
+            for (int i = 0; i < colors.Length; i++)
+            {
+                population += districtMakeup[i][districtNumber];
+            }
+            return population;
+        }
+    }
+
+    private bool isContinuous(gridSpace gridSpace)
+    {
+        //  If the district is empty, it is continuous
+        if (isDistrictEmpty(currentDistrict)) return true;
+        else
+        {
+            Debug.Log(gridSpace.gridPos);
+            //  Get the N, S, E, W spaces of the map
+            float north     = gridSpace.gridPos.y + 1;
+            float south     = gridSpace.gridPos.y - 1;
+            float east      = gridSpace.gridPos.x + 1;
+            float west      = gridSpace.gridPos.x - 1;
+
+            bool northIsContinuous = false;
+            bool southIsContinuous = false;
+            bool eastIsContinuous = false;
+            bool westIsContinuous = false;
+
+            //  Compares the district of the adjacent spaces if withing bounds
+            if (north < rows)
+                northIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)north].getDistrict() == gridSpace.getDistrict();
+
+            if (south > -1)
+                southIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)south].getDistrict() == gridSpace.getDistrict();
+
+            if (east < cols)
+                eastIsContinuous = gridCoordinates[(int)east, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
+
+            if (west > -1)
+                westIsContinuous = gridCoordinates[(int)west, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
+
+            //  If at least one space is continuous, we can add the gridspace to the current party
+            return northIsContinuous || southIsContinuous || eastIsContinuous || westIsContinuous;
+        }
+    }
+
+    private bool populationCheck()
+    {
+        /*
+                Compare the number of square in each district
+                Check if the difference is between a certian threshold
+         */
+         // Returns the population of a district
+        Debug.Log(districtMakeup[0][currentDistrict] + districtMakeup[1][currentDistrict]);
+        return false;
+    }
+
+
+    // Update is called once per frame
+    void Update () {
 		if (Input.GetKeyDown (KeyCode.R)) {
 			SceneManager.LoadScene (SceneManager.GetActiveScene().name);
-		}	
+		}
 
-
+        
 		//mouse input shenenigans of all sorts
 		if (Input.GetMouseButtonDown (0)) {
 			//left click
@@ -88,22 +168,37 @@ public class districtMap : MonoBehaviour {
 			haveScrolled = false;
 		}
 
-		if (isSelecting && Input.GetMouseButton (0)) {
+        //  Implement rules starting from here
+        //  Rules:
+        //      1:  Continuity -    A district should connect to all its population
+        //      2:  Population -    A district must have roughly the same amount of
+        //                          squares(people) int it
+
+        if (isSelecting && Input.GetMouseButton (0)) {
 			//you're holding the mouse down
 			RaycastHit hit = new RaycastHit ();
 			if (Physics.Raycast (Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
 				//you hit a district!
-				GameObject objectHit = hit.transform.gameObject;
+				gridSpace objectHit = hit.transform.gameObject.GetComponent<gridSpace>();
 				//check if it was already a district or not
-				int prevDistrict = objectHit.GetComponent<gridSpace> ().getDistrict ();
+				int prevDistrict = objectHit.getDistrict ();
 				if (prevDistrict != -1) {
 					//it was previously a district, but now it's not gonna be that anymore
 					//so we lower the count
-					districtMakeup [objectHit.GetComponent<gridSpace> ().getGroup ()] [prevDistrict]--;
+					districtMakeup [objectHit.getGroup ()] [prevDistrict]--;
 				}
-				//ok now set the district and increase the count
-				objectHit.GetComponent<gridSpace> ().setDistrict (currentDistrict, districtColors[currentDistrict]);
-				districtMakeup [objectHit.GetComponent<gridSpace> ().getGroup ()] [currentDistrict]++;
+                //ok now set the district and increase the count
+                // check if continuos
+                objectHit.setDistrict(currentDistrict);
+                if (isContinuous(objectHit))
+                {
+                    objectHit.setColor(districtColors[currentDistrict]);
+                    districtMakeup[objectHit.getGroup()][currentDistrict]++;
+                }
+                else
+                {
+                    objectHit.setDistrict(-1);
+                }
 			}
 		}
 
@@ -136,11 +231,13 @@ public class districtMap : MonoBehaviour {
 	void setup(){
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				GameObject space = Instantiate (cube, new Vector3(rows*0.5f-i,0,cols*0.5f-j), Quaternion.identity);
+                GameObject space = Instantiate (cube, new Vector3(i,0,j), Quaternion.identity);
 				int g = Random.Range (0, colors.Length);
 				space.GetComponent<gridSpace> ().setGroup (g, colors[g]);
-				space.GetComponent<gridSpace> ().setDistrict (-1, new Color(0f,0f,0f,0f));
+				space.GetComponent<gridSpace> ().setDistrict (-1);
+                space.GetComponent<gridSpace>().setGridPos(i, j);
 				gridspaces.Add (space);
+                gridCoordinates[i, j] = space.GetComponent<gridSpace>();
 			}
 		}
 	}
