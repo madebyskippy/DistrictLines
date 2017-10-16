@@ -56,8 +56,8 @@ public class districtMap : MonoBehaviour {
 			districtMakeup[0] [i] = 0;
 			districtMakeup[1] [i] = 0;
 			GameObject indicator = Instantiate (districtIndicatorPrefab);
-			indicator.transform.SetParent (UICanvas.transform);
 			indicator.transform.position = new Vector3 (50f, 50f+(75f*(numDistricts-1))-75f*i, 0f);
+			indicator.transform.SetParent (UICanvas.transform,false);
 			indicator.GetComponent<districtIndicator> ().setLabel (districtColors [i], (i+1).ToString());
 			indicators [i] = indicator.GetComponent<districtIndicator>();
 		}
