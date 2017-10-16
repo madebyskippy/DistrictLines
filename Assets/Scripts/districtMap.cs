@@ -11,7 +11,7 @@ public class districtMap : MonoBehaviour {
 	//each grid space represented by a cube
 	[SerializeField] GameObject cube;
 
-	//the materials that represent the two groups
+	//the colors that represent the two groups
 	[SerializeField] Color[] colors;
 
 	[SerializeField] int numDistricts;
@@ -22,9 +22,12 @@ public class districtMap : MonoBehaviour {
 	[SerializeField] int cols;
 
 	//UI stuff
+	[Header("UI stuff")]
 	[SerializeField] GameObject UICanvas;
 	[SerializeField] GameObject districtIndicatorPrefab;
 	[SerializeField] Color[] districtColors;
+	[SerializeField] Text districtHeader;
+	[SerializeField] Text feedback;
 
 	//list of all the game spaces
 	List<gridSpace> gridspaces;
@@ -34,6 +37,7 @@ public class districtMap : MonoBehaviour {
 	//e.g. districtMakeup[0][0] is how many people are in group A in district 1.
 	//	   districtMakeup[1][0] is how many people are in group B in district 1.
 	int[][] districtMakeup;
+	int[] totalPopulation;
 
 	//for user input and UI
 	bool haveScrolled = false;
@@ -46,22 +50,27 @@ public class districtMap : MonoBehaviour {
         MAX_POPULATION_DIFFERENCE = 4;
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
+		totalPopulation = new int[]{0,0};
 		indicators = new districtIndicator[numDistricts];
 		for (int i = 0; i < numDistricts; i++) {
 			districtMakeup[0] [i] = 0;
 			districtMakeup[1] [i] = 0;
 			GameObject indicator = Instantiate (districtIndicatorPrefab);
 			indicator.transform.SetParent (UICanvas.transform);
-			indicator.transform.localPosition = new Vector3 (0f, 15f+30f*i, 0f);
-			indicator.GetComponent<districtIndicator> ().setLabel (districtColors [i]);
+			indicator.transform.position = new Vector3 (50f, 50f+(75f*(numDistricts-1))-75f*i, 0f);
+			indicator.GetComponent<districtIndicator> ().setLabel (districtColors [i], (i+1).ToString());
 			indicators [i] = indicator.GetComponent<districtIndicator>();
 		}
+
+		districtHeader.gameObject.transform.position = new Vector3 (50f, 50f + (75f * (numDistricts - 1)) + 85f, 0f);
 
 		gridspaces = new List<gridSpace> ();
         gridCoordinates = new gridSpace[rows,cols];
 		setup ();
 
 		indicators [0].setActive (true);
+
+		feedback.text = "";
 	}
 
     public bool isDistrictEmpty(int districtNumber)
@@ -170,7 +179,7 @@ public class districtMap : MonoBehaviour {
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
 			if (!haveScrolled) {
 				float scroll = Input.GetAxis ("Mouse ScrollWheel");
-				Debug.Log (scroll);
+//				Debug.Log (scroll);
 				nextDistrict((scroll > 0));
 				haveScrolled = true;
 			}
@@ -197,10 +206,13 @@ public class districtMap : MonoBehaviour {
                 if (isContinuous(objectHit))
                 {
                     objectHit.setColor(districtColors[currentDistrict]);
-                    districtMakeup[objectHit.getGroup()][currentDistrict]++;
+					districtMakeup[objectHit.getGroup()][currentDistrict]++;
+					feedback.text = "";
                 }
                 else
                 {
+					feedback.color = Color.red;
+					feedback.text = "Selection is not continuous with current district.";
                     objectHit.setDistrict(-1);
                 }
 			}
@@ -218,26 +230,63 @@ public class districtMap : MonoBehaviour {
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            bool allSpacesAssigned = true;
-            for (int i = 0; i < gridspaces.Count; i++)
-            {
-                if(gridspaces[i].getDistrict() == -1)
-                {
-                    Debug.Log("Some people have not been assined a district");
-                    allSpacesAssigned = false;
-                    break;
-                }
-            }
-
-            if(populationDistributionIsValid() && allSpacesAssigned)
-            {
-                Debug.Log("Population Distribution looks pretty good! Now let's vote!");
-            }
-            else
-            {
-                Debug.Log("One district has too many people");
-            }
+			submit ();
         }
+	}
+
+	//finished redistricting
+	public void submit(){
+		feedback.text = "";
+		bool allSpacesAssigned = true;
+		for (int i = 0; i < gridspaces.Count; i++)
+		{
+			if(gridspaces[i].getDistrict() == -1)
+			{
+				feedback.color = Color.red;
+				feedback.text = "Some people have not been assigned a district.";
+				Debug.Log("Some people have not been assined a district");
+				allSpacesAssigned = false;
+				break;
+			}
+		}
+
+		if(populationDistributionIsValid() && allSpacesAssigned)
+		{
+			Debug.Log("Population Distribution looks pretty good! Now let's vote!");
+			analyze ();
+		}
+		else
+		{
+			if (feedback.text != "") {
+				feedback.text += "\n";
+			}
+			feedback.color = Color.red;
+			feedback.text += "One district has too many people.";
+			Debug.Log("One district has too many people");
+		}
+	}
+
+	void analyze(){
+		int group1=0;
+		int group2=0;
+		int tie = 0;
+		for (int i = 0; i < numDistricts; i++) {
+			if (districtMakeup [0] [i] > districtMakeup [1] [i]) {
+				group1++;
+			} else if (districtMakeup [0] [i] < districtMakeup [1] [i]) {
+				group2++;
+			} else {
+				tie++;
+			}
+		}
+		feedback.color = Color.black;
+		feedback.text = "Group 1 pop: "+totalPopulation[0]+"\tGroup2 pop: "+totalPopulation[1]+"\n";
+		feedback.text += "Group 1 got "+group1+" districts.\n";
+		feedback.text += "Group 2 got "+group2+" districts.";
+		if (tie > 0) {
+			feedback.text += "\nThere were "+tie+" ties.";
+		}
+
 	}
 
 	void nextDistrict(bool isUp){
@@ -264,6 +313,7 @@ public class districtMap : MonoBehaviour {
                 space.GetComponent<gridSpace>().setGridPos(i, j);
 				gridspaces.Add (space);
                 gridCoordinates[i, j] = space.GetComponent<gridSpace>();
+				totalPopulation [g]++;
 			}
 		}
 	}

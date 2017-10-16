@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class districtIndicator : MonoBehaviour {
 
 	[SerializeField] GameObject label;
+	[SerializeField] Text labeltext;
 	[SerializeField] GameObject[] groups;
 
 	bool isActive;
@@ -22,16 +23,21 @@ public class districtIndicator : MonoBehaviour {
 		
 	}
 
-	public void setLabel(Color c){
+	public void setLabel(Color c, string l){
 		label.GetComponent<Image>().color = c;
+		labeltext.text = l;
 	}
 
 	public void setActive(bool a){
 		isActive = a;
 		if (isActive) {
-			label.transform.localScale = Vector3.one * 1.5f;
+			label.transform.localScale = new Vector3(1.75f,1f,1f);
+			labeltext.color = Color.white;
+			labeltext.fontStyle = FontStyle.Bold;
 		} else {
 			label.transform.localScale = Vector3.one;
+			labeltext.color = Color.black;
+			labeltext.fontStyle = FontStyle.Normal;
 		}
 	}
 
