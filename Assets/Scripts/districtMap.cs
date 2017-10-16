@@ -62,7 +62,9 @@ public class districtMap : MonoBehaviour {
 			indicators [i] = indicator.GetComponent<districtIndicator>();
 		}
 
-		districtHeader.gameObject.transform.position = new Vector3 (50f, 50f + (75f * (numDistricts - 1)) + 85f, 0f);
+		float height = indicators [0].GetComponent<RectTransform> ().rect.height;
+		height *= 0.75f * UICanvas.GetComponent<Canvas> ().scaleFactor;
+		districtHeader.gameObject.transform.position = new Vector3 (indicators[0].transform.position.x,indicators[0].transform.position.y+height, 0f);
 
 		gridspaces = new List<gridSpace> ();
         gridCoordinates = new gridSpace[rows,cols];
