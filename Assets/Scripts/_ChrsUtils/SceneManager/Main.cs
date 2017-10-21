@@ -79,6 +79,7 @@ public class Main : MonoBehaviour
         Services.GeneralTaskManager = new TaskManager();
         Services.Prefabs = Resources.Load<PrefabDB>("Prefabs/PrefabDB");
         Services.InputManager = new InputManager();
+        Services.LevelLoader = GetComponent<LevelLoader>();
         Services.Scenes = new GameSceneManager<TransitionData>(gameObject, Services.Prefabs.Scenes);
         
     }
