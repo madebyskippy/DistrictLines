@@ -124,8 +124,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e708c9005dae401cbf4caa193248321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridPos: {x: 0, y: 0}
   districtSprite: {fileID: 212976267560317686}
   selectorSprite: {fileID: 212992436260524476}
+  populationClump:
+  - {fileID: 21300000, guid: 3746548a32e1745369f89496ed70a85e, type: 3}
+  - {fileID: 21300000, guid: 56f392de3d6084eaa9fbad7dcdb9e24b, type: 3}
 --- !u!212 &212976267560317686
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -199,8 +203,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 5b751f53a42ab46aebfa7a1427b169bc, type: 3}
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 17eb945ca568d4fa1b38765ef2aaa728, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0

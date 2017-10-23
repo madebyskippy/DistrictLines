@@ -5,20 +5,55 @@ using UnityEngine;
 public class gridSpace : MonoBehaviour {
 
     private int district;
-    public int party;
+    private int[] partyCount;
 
     public Vector2 gridPos;
 
 	[SerializeField] SpriteRenderer districtSprite;
 	[SerializeField] SpriteRenderer selectorSprite;
+	[SerializeField] Sprite[] populationClump;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		partyCount = new int[2];
+	}
+
+	void Start(){
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void displayClumps(){
+		//ceiling the square root to get the cols/rows and then place them
+		int cols = (int)Mathf.Ceil(Mathf.Sqrt(partyCount [0] + partyCount [1]));
+		for (int i = 0; i < cols; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (i * cols + j < partyCount [0] + partyCount [1]) {
+					//I could make a prefab but I just did all the gameobject settings here
+					GameObject clump = new GameObject ();
+					SpriteRenderer sr = clump.AddComponent<SpriteRenderer> ();
+					sr.color = Color.grey;
+					sr.sortingOrder = 1;
+					if (i * cols + j >= partyCount [0]) {
+						sr.sprite = populationClump [1];
+						clump.transform.localScale = Vector3.one * 0.23f;
+					} else {
+						sr.sprite = populationClump [0];
+						clump.transform.localScale = Vector3.one * 0.18f;
+					}
+					clump.transform.parent = transform;
+					clump.transform.localRotation = Quaternion.Euler (90f, 0f, 0f);
+
+					//center & grid it in the area
+					clump.transform.localPosition = new Vector3 (-0.125f * (cols - 1f) + i * 0.25f, 0f, -0.125f * (cols - 1f) + j * 0.25f);
+				} else {
+					break;
+				}
+			}
+		}
 	}
 
     public void setGridPos(float x, float y)
@@ -37,11 +72,21 @@ public class gridSpace : MonoBehaviour {
         transform.position = newPos;
     }
 
-	public void setGroup(int g, Color c){
-		party = g;
-		districtSprite.color = c;
+	public void setGroups(Vector2 groups){
+		partyCount[0] = (int)groups.x;
+		partyCount[1] = (int)groups.y;
+		displayClumps ();
+	}public void setGroups(int g1, int g2){
+		partyCount[0] = g1;
+		partyCount[1] = g2;
+		displayClumps();
 	}public int getGroup(){
-		return party;
+		if (partyCount[0] > partyCount[1]){
+			return 0;
+		}else if (partyCount[0] < partyCount[1]){
+			return 1;
+		}
+		return -1; //tie
 	}
 
 

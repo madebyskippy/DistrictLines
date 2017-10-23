@@ -309,13 +309,19 @@ public class districtMap : MonoBehaviour {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
                 gridSpace space = Instantiate (cube, new Vector3(i,0,j), Quaternion.identity).GetComponent<gridSpace>();
-				int g = Random.Range (0, colors.Length);
-				space.GetComponent<gridSpace> ().setGroup (g, colors[g]);
+				int totalInArea = Random.Range(1,10); //total of 9 "people"
+				int firstGroup = Random.Range (0, totalInArea);
+				if (firstGroup == totalInArea / 2.0f) {
+					//prevent ties, we can't handle them right now
+					firstGroup++;
+				}
+				space.GetComponent<gridSpace> ().setGroups(firstGroup,totalInArea-firstGroup);
 				space.GetComponent<gridSpace> ().setDistrict (-1);
                 space.GetComponent<gridSpace>().setGridPos(i, j);
 				gridspaces.Add (space);
                 gridCoordinates[i, j] = space.GetComponent<gridSpace>();
-				totalPopulation [g]++;
+				totalPopulation [0] += firstGroup;
+				totalPopulation [1] += (totalInArea - firstGroup);
 			}
 		}
 	}
