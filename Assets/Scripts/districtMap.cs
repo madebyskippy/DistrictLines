@@ -28,6 +28,7 @@ public class districtMap : MonoBehaviour {
 	[SerializeField] Color[] districtColors;
 	[SerializeField] Text districtHeader;
 	[SerializeField] Text feedback;
+	[SerializeField] Text instructions;
 
 	//list of all the game spaces
 	List<gridSpace> gridspaces;
@@ -75,6 +76,8 @@ public class districtMap : MonoBehaviour {
 		setup ();
 
 		indicators [0].setActive (true);
+
+		instructions.text += "\n\nGOAL: " + LM.getInstructions ();
 
 		feedback.text = "";
 	}

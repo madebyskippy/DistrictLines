@@ -477,6 +477,7 @@ MonoBehaviour:
   - {r: 1, g: 0.64158213, b: 0.31617647, a: 0.5882353}
   districtHeader: {fileID: 114344378736334718}
   feedback: {fileID: 114842982398676578}
+  instructions: {fileID: 114407106508700076}
 --- !u!114 &114974211659305268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -623,7 +624,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1192546137695808}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 50, y: -150, z: 0}
+  m_LocalPosition: {x: 50, y: -200, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224705736265219890}
@@ -631,8 +632,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -150}
-  m_SizeDelta: {x: 600, y: 200}
+  m_AnchoredPosition: {x: 50, y: -200}
+  m_SizeDelta: {x: 600, y: 150}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224293879790806082
 RectTransform:
@@ -650,7 +651,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 50, y: -50}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 900, y: 150}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224705736265219890
 RectTransform:
