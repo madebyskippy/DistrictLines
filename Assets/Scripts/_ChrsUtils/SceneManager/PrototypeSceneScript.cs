@@ -21,6 +21,10 @@ public class PrototypeSceneScript : Scene<TransitionData>
 
     }
 
+	public void ChangeScene(){
+		Services.Scenes.Swap<VotingSceneScript>();
+	}
+
     // Update is called once per frame
     void Update () {
 		

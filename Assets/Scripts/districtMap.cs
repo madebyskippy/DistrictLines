@@ -45,8 +45,12 @@ public class districtMap : MonoBehaviour {
 	int currentDistrict = 0; //the district that you're selecting for
 	districtIndicator[] indicators;
 
+	//for interfacing with the other 'scenes' like the voting phase
+	levelManager LM;
+
 	// Use this for initialization
 	void Start () {
+		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
         MAX_POPULATION_DIFFERENCE = 4;
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
@@ -162,10 +166,6 @@ public class districtMap : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		if (Input.GetKeyDown (KeyCode.R)) {
-			SceneManager.LoadScene (SceneManager.GetActiveScene().name);
-		}
-
         
 		//mouse input shenenigans of all sorts
 		if (Input.GetMouseButtonDown (0)) {
@@ -230,10 +230,6 @@ public class districtMap : MonoBehaviour {
 
 		}
 
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-			submit ();
-        }
 	}
 
 	//finished redistricting
@@ -269,6 +265,12 @@ public class districtMap : MonoBehaviour {
 	}
 
 	void analyze(){
+
+		LM.setDistrictMakeup (districtMakeup);
+		LM.setTotalPopulation (totalPopulation);
+
+		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
+
 		int group1=0;
 		int group2=0;
 		int tie = 0;
