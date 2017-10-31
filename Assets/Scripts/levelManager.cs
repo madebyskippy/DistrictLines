@@ -11,6 +11,7 @@ public class levelManager : MonoBehaviour {
 
 	int scoreType;
 	int map;
+	int numDistricts;
 
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
 	int[][] districtMakeup;
@@ -19,7 +20,7 @@ public class levelManager : MonoBehaviour {
 	void Start () {
 
 		//TEMPORARY FOR TESTING! should be set by the level loader
-		setLevel(1,0);
+		setLevel(3,0,5);
 
 	}
 	
@@ -31,9 +32,14 @@ public class levelManager : MonoBehaviour {
 	//-----
 	//-----for map phase
 	//-----
-	public void setLevel(int st, int m){
+	public void setLevel(int st, int m, int nd){
 		scoreType = st;
 		map = m;
+		numDistricts = nd;
+	}
+
+	public int getNumDistricts(){
+		return numDistricts;
 	}
 
 	public int getMap(){

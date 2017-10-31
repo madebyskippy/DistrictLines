@@ -271,26 +271,6 @@ public class districtMap : MonoBehaviour {
 
 		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
 
-		int group1=0;
-		int group2=0;
-		int tie = 0;
-		for (int i = 0; i < numDistricts; i++) {
-			if (districtMakeup [0] [i] > districtMakeup [1] [i]) {
-				group1++;
-			} else if (districtMakeup [0] [i] < districtMakeup [1] [i]) {
-				group2++;
-			} else {
-				tie++;
-			}
-		}
-		feedback.color = Color.black;
-		feedback.text = "Group 1 pop: "+totalPopulation[0]+"\tGroup2 pop: "+totalPopulation[1]+"\n";
-		feedback.text += "Group 1 got "+group1+" districts.\n";
-		feedback.text += "Group 2 got "+group2+" districts.";
-		if (tie > 0) {
-			feedback.text += "\nThere were "+tie+" ties.";
-		}
-
 	}
 
 	void nextDistrict(bool isUp){
