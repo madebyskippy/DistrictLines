@@ -294,6 +294,7 @@ public class districtMap : MonoBehaviour {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
                 gridSpace space = Instantiate (cube, new Vector3(i,0,j), Quaternion.identity).GetComponent<gridSpace>();
+				space.transform.parent = transform;
 				int totalInArea = Random.Range(1,10); //total of 9 "people"
 				int firstGroup = Random.Range (0, totalInArea);
 				if (firstGroup == totalInArea / 2.0f) {
