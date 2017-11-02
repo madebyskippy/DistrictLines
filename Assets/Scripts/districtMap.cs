@@ -262,6 +262,7 @@ public class districtMap : MonoBehaviour {
 			//this is for UI display
 			for (int i = 0; i < numDistricts; i++) {
 				indicators [i].setGroups (districtMakeup [0] [i],districtMakeup [1] [i]);
+				indicators [i].setPopulation (getDistrictTotalPopulation (i));
 			}
             
 		}

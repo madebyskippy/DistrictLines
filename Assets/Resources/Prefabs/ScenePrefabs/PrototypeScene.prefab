@@ -286,7 +286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: district breakdown
+  m_Text: district breakdown & population count
 --- !u!114 &114407106508700076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -843,5 +843,5 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 400, y: 30}
+  m_SizeDelta: {x: 500, y: 30}
   m_Pivot: {x: 0, y: 0}

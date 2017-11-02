@@ -7,6 +7,7 @@ public class districtIndicator : MonoBehaviour {
 
 	[SerializeField] GameObject label;
 	[SerializeField] Text labeltext;
+	[SerializeField] Text poptext;
 	[SerializeField] GameObject[] groups;
 
 	bool isActive;
@@ -52,5 +53,9 @@ public class districtIndicator : MonoBehaviour {
 			groups [0].transform.localScale = new Vector3 (ratio, 1f, 1f);
 			groups [1].transform.localScale = new Vector3 (1f, 1f, 1f);
 		}
+	}
+
+	public void setPopulation(int p){
+		poptext.text = p.ToString ();
 	}
 }
