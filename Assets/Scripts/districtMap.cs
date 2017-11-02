@@ -272,7 +272,8 @@ public class districtMap : MonoBehaviour {
 		bool allSpacesAssigned = true;
 		for (int i = 0; i < gridspaces.Count; i++)
 		{
-			if(gridspaces[i] != null && gridspaces[i].getDistrict() == -1)
+            if (gridspaces[i] != null) break;
+			if (gridspaces[i].getDistrict() == -1)
 			{
 				feedback.color = Color.red;
 				feedback.text = "Some people have not been assigned a district.";
