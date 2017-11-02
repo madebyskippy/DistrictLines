@@ -94,7 +94,8 @@ public class votingManager : MonoBehaviour {
 		if (totalPopulation [0] < totalPopulation [1]) {
 			pop_minority = 0;
 		}
-		feedbackText.text += "\nthe population minority was group " + pop_minority + " and the district representative minority is group " + result_minority+".";
+		feedbackText.text += "\nthe population minority was group " + pop_minority;
+		feedbackText.text += "\nand the district representative minority is group " + result_minority+".";
 		return (result_minority != pop_minority);
 	}
 
@@ -105,7 +106,7 @@ public class votingManager : MonoBehaviour {
 
 		int result_majority = Mathf.Max (districtCount [0], districtCount [1]);
 
-		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives, they got " + result_majority + " representatives.";
+		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives,\nthey got " + result_majority + " representatives.";
 		if (pop_majority >= numDistricts) {
 			return (result_majority == pop_majority);
 		}

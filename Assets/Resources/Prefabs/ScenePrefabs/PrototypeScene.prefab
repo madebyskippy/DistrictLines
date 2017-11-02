@@ -523,7 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a068148310d842c7b1894ff9482e053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAX_POPULATION_DIFFERENCE: 0
+  MAX_POPULATION_DIFFERENCE: 50
   cube: {fileID: 1966789702551746, guid: 6f480c91265e64a0599d81031eedcd17, type: 2}
   colors:
   - {r: 1, g: 0.95182556, b: 0.30147058, a: 1}

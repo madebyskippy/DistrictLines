@@ -54,7 +54,6 @@ public class districtMap : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
-        MAX_POPULATION_DIFFERENCE = 4;
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
 		totalPopulation = new int[]{0,0};
