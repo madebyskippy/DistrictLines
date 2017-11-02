@@ -37,6 +37,8 @@ public class gridSpace : MonoBehaviour {
 					SpriteRenderer sr = clump.AddComponent<SpriteRenderer> ();
 					sr.color = Color.grey;
 					sr.sortingOrder = 1;
+					clump.transform.parent = transform;
+					clump.transform.localRotation = Quaternion.Euler (90f, 0f, 0f);
 					if (i * cols + j >= partyCount [0]) {
 						sr.sprite = populationClump [1];
 						clump.transform.localScale = Vector3.one * 0.23f;
@@ -44,11 +46,10 @@ public class gridSpace : MonoBehaviour {
 						sr.sprite = populationClump [0];
 						clump.transform.localScale = Vector3.one * 0.18f;
 					}
-					clump.transform.parent = transform;
-					clump.transform.localRotation = Quaternion.Euler (90f, 0f, 0f);
 
 					//center & grid it in the area
 					clump.transform.localPosition = new Vector3 (-0.125f * (cols - 1f) + i * 0.25f, 0f, -0.125f * (cols - 1f) + j * 0.25f);
+
 				} else {
 					break;
 				}

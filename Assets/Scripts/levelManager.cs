@@ -20,7 +20,8 @@ public class levelManager : MonoBehaviour {
 	void Start () {
 
 		//TEMPORARY FOR TESTING! should be set by the level loader
-		setLevel(3,0,5);
+
+		setLevel(Random.Range(1,4),0,5);
 
 	}
 	

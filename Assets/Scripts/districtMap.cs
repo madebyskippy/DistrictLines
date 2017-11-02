@@ -29,6 +29,8 @@ public class districtMap : MonoBehaviour {
 	[SerializeField] Text districtHeader;
 	[SerializeField] Text feedback;
 	[SerializeField] Text instructions;
+	[SerializeField] Text goalText;
+	[SerializeField] Text stats;
 
 	//list of all the game spaces
 	List<gridSpace> gridspaces;
@@ -77,7 +79,7 @@ public class districtMap : MonoBehaviour {
 
 		indicators [0].setActive (true);
 
-		instructions.text += "\n\nGOAL: " + LM.getInstructions ();
+		goalText.text = "GOAL: "+LM.getInstructions ();
 
 		feedback.text = "";
 	}
@@ -310,5 +312,7 @@ public class districtMap : MonoBehaviour {
 				totalPopulation [1] += (totalInArea - firstGroup);
 			}
 		}
+		stats.text = "Circle population is: " + totalPopulation [0];
+		stats.text += "\nTriangle population is: " + totalPopulation [1];
 	}
 }

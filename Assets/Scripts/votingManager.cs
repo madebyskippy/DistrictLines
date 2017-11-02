@@ -31,7 +31,7 @@ public class votingManager : MonoBehaviour {
 	public void score(int i){
 		districtCount = getDistrictCount ();
 
-		feedbackText.text = "group 1 had "+totalPopulation[0]+" people and group 2 had "+totalPopulation[1]+" people.";
+		feedbackText.text = "group 1 had "+totalPopulation[0]+" people and group 2 had "+totalPopulation[1]+" people.\n";
 
 		switch (i) {
 		case 1:
@@ -101,7 +101,7 @@ public class votingManager : MonoBehaviour {
 	//if the majority wins one more district than it "should" have (if possible)
 	bool isMajorityLandslide(){
 		float pop_majority = (float)Mathf.Max(totalPopulation[0],totalPopulation[1]) / (float)(totalPopulation [0] + totalPopulation [1]);
-		pop_majority = Mathf.Floor(pop_majority * numDistricts);
+		pop_majority = Mathf.Round(pop_majority * numDistricts);
 
 		int result_majority = Mathf.Max (districtCount [0], districtCount [1]);
 
