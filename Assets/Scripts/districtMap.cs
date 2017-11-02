@@ -79,6 +79,10 @@ public class districtMap : MonoBehaviour {
         //setup ();
         Services.LevelLoader.setDistrictMap(this);
         Services.LevelLoader.loadLevel(Level.OHIO_STATE, new Vector2(rows, cols));
+
+		stats.text = "Circle population is: " + totalPopulation [0];
+		stats.text += "\nTriangle population is: " + totalPopulation [1];
+
         indicators [0].setActive (true);
 
 		goalText.text = "GOAL: "+LM.getInstructions ();
