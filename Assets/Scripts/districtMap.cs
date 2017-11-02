@@ -8,8 +8,8 @@ public class districtMap : MonoBehaviour {
 
     [SerializeField] int MAX_POPULATION_DIFFERENCE;
 
-	//each grid space represented by a cube
-	[SerializeField] GameObject cube;
+    //each grid space represented by a cube
+    [SerializeField] GameObject cube;
 
 	//the colors that represent the two groups
 	[SerializeField] Color[] colors;
@@ -72,17 +72,43 @@ public class districtMap : MonoBehaviour {
 		float height = indicators [0].GetComponent<RectTransform> ().rect.height;
 		height *= 0.75f * UICanvas.GetComponent<Canvas> ().scaleFactor;
 		districtHeader.gameObject.transform.position = new Vector3 (indicators[0].transform.position.x,indicators[0].transform.position.y+height, 0f);
-
+        rows = 16;
+        cols = 16;
 		gridspaces = new List<gridSpace> ();
         gridCoordinates = new gridSpace[rows,cols];
-		setup ();
-
-		indicators [0].setActive (true);
+        //setup ();
+        Services.LevelLoader.setDistrictMap(this);
+        Services.LevelLoader.loadLevel(Level.OHIO_STATE, new Vector2(rows, cols));
+        indicators [0].setActive (true);
 
 		goalText.text = "GOAL: "+LM.getInstructions ();
 
 		feedback.text = "";
 	}
+
+    public GameObject getCountryPrefab()
+    {
+        return cube;
+    }
+
+    public void addGridSpaceToMap(gridSpace county)
+    {
+        gridspaces.Add(county);
+    }
+
+    public void setCountyPopulation(int[] population)
+    {
+        totalPopulation[0] += population[0];
+        totalPopulation[1] += population[1];
+    }
+
+    public void setGridCoordinates(Vector2 coord, gridSpace county)
+    {
+        if (coord.x < 0 || coord.y < 0) return;
+        if (coord.x > rows - 1 || coord.y > cols - 1) return;
+
+        gridCoordinates[(int)coord.x, (int)coord.y] = county;
+    }
 
     public bool isDistrictEmpty(int districtNumber)
     {
@@ -106,9 +132,10 @@ public class districtMap : MonoBehaviour {
             //  Otherwise we add all the members of each party
             //  in the district we are counting to its population
             int population = 0;
-            for (int i = 0; i < colors.Length; i++)
+            foreach(gridSpace county in gridspaces)
             {
-                population += districtMakeup[i][districtNumber];
+                if(county.getDistrict() == districtNumber)
+                    population += county.getTotalPopulation();
             }
             return population;
         }
@@ -132,16 +159,16 @@ public class districtMap : MonoBehaviour {
             bool westIsContinuous = false;
 
             //  Compares the district of the adjacent spaces if withing bounds
-            if (north < rows)
+            if (north < rows && gridCoordinates[(int)gridSpace.gridPos.x, (int)north] != null)
                 northIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)north].getDistrict() == gridSpace.getDistrict();
 
-            if (south > -1)
+            if (south > -1 && gridCoordinates[(int)gridSpace.gridPos.x, (int)south] != null)
                 southIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)south].getDistrict() == gridSpace.getDistrict();
 
-            if (east < cols)
+            if (east < cols && gridCoordinates[(int)east, (int)gridSpace.gridPos.y] != null)
                 eastIsContinuous = gridCoordinates[(int)east, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
 
-            if (west > -1)
+            if (west > -1 && gridCoordinates[(int)west, (int)gridSpace.gridPos.y] != null)
                 westIsContinuous = gridCoordinates[(int)west, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
 
             //  If at least one space is continuous, we can add the gridspace to the current party
@@ -232,7 +259,7 @@ public class districtMap : MonoBehaviour {
 			for (int i = 0; i < numDistricts; i++) {
 				indicators [i].setGroups (districtMakeup [0] [i],districtMakeup [1] [i]);
 			}
-
+            
 		}
 
 	}
@@ -243,7 +270,7 @@ public class districtMap : MonoBehaviour {
 		bool allSpacesAssigned = true;
 		for (int i = 0; i < gridspaces.Count; i++)
 		{
-			if(gridspaces[i].getDistrict() == -1)
+			if(gridspaces[i] != null &&gridspaces[i].getDistrict() == -1)
 			{
 				feedback.color = Color.red;
 				feedback.text = "Some people have not been assigned a district.";
