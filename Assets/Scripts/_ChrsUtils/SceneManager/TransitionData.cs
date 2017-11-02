@@ -16,13 +16,9 @@ public class TransitionData
         set { }
     }
 
-    public TitleScreen TITLE;
 
-    public struct TitleScreen
-    {
-        public bool visitedScene;
-        public Vector3 position;
-        public Vector3 scale;
-    }
+    public string lvl;
+    public Vector2 dimensions;
+    
 }
 

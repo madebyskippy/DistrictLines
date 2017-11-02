@@ -52,7 +52,7 @@ public class districtMap : MonoBehaviour {
 	levelManager LM;
 
 	// Use this for initialization
-	void Start () {
+	public void init () {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
@@ -71,13 +71,12 @@ public class districtMap : MonoBehaviour {
 		float height = indicators [0].GetComponent<RectTransform> ().rect.height;
 		height *= 0.75f * UICanvas.GetComponent<Canvas> ().scaleFactor;
 		districtHeader.gameObject.transform.position = new Vector3 (indicators[0].transform.position.x,indicators[0].transform.position.y+height, 0f);
-        rows = 16;
-        cols = 16;
-		gridspaces = new List<gridSpace> ();
-        gridCoordinates = new gridSpace[rows,cols];
-        //setup ();
-        Services.LevelLoader.setDistrictMap(this);
-        Services.LevelLoader.loadLevel(Level.OHIO_STATE, new Vector2(rows, cols));
+        rows = (int)TransitionData.Instance.dimensions.x;
+        cols = (int)TransitionData.Instance.dimensions.y;
+
+        gridspaces = new List<gridSpace> ();
+        gridCoordinates = new gridSpace[rows, cols];
+        
 
 		stats.text = "Circle population is: " + totalPopulation [0];
 		stats.text += "\nTriangle population is: " + totalPopulation [1];
@@ -274,7 +273,7 @@ public class districtMap : MonoBehaviour {
 		bool allSpacesAssigned = true;
 		for (int i = 0; i < gridspaces.Count; i++)
 		{
-			if(gridspaces[i] != null &&gridspaces[i].getDistrict() == -1)
+			if(gridspaces[i] != null && gridspaces[i].getDistrict() == -1)
 			{
 				feedback.color = Color.red;
 				feedback.text = "Some people have not been assigned a district.";
@@ -282,7 +281,14 @@ public class districtMap : MonoBehaviour {
 				allSpacesAssigned = false;
 				break;
 			}
+
+            
 		}
+
+        for(int i = 0; i < districtColors.Length; i++)
+        {
+            Debug.Log("District " + i + ": " + getDistrictTotalPopulation(i));
+        }
 
 		if(populationDistributionIsValid() && allSpacesAssigned)
 		{
@@ -337,7 +343,10 @@ public class districtMap : MonoBehaviour {
 				space.GetComponent<gridSpace> ().setGroups(firstGroup,totalInArea-firstGroup);
 				space.GetComponent<gridSpace> ().setDistrict (-1);
                 space.GetComponent<gridSpace>().setGridPos(i, j);
-				gridspaces.Add (space);
+
+                space.setCirclePartyPopulation(firstGroup);
+                space.setTrianglePartyPopulation((totalInArea - firstGroup));
+                gridspaces.Add (space);
                 gridCoordinates[i, j] = space.GetComponent<gridSpace>();
 				totalPopulation [0] += firstGroup;
 				totalPopulation [1] += (totalInArea - firstGroup);

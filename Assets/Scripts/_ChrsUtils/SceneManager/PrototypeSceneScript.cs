@@ -11,9 +11,14 @@ public class PrototypeSceneScript : Scene<TransitionData>
     //
     //  ASCII level loader
 
+    public districtMap districtMap;
+
     internal override void OnEnter(TransitionData data)
     {
-
+       districtMap = GameObject.Find("DistrictMap").GetComponent<districtMap>();
+       districtMap.init();
+       Services.LevelLoader.setDistrictMap(districtMap);
+       Services.LevelLoader.loadLevel(TransitionData.Instance.lvl, TransitionData.Instance.dimensions);
     }
 
     internal override void OnExit()
