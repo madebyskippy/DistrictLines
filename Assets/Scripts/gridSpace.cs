@@ -7,6 +7,9 @@ public class gridSpace : MonoBehaviour {
     private int district;
     private int[] partyCount;
 
+    private int trianglePartyPopulation;
+    private int circlePartyPopulation;
+
     public Vector2 gridPos;
 
 	[SerializeField] SpriteRenderer districtSprite;
@@ -95,6 +98,27 @@ public class gridSpace : MonoBehaviour {
 	}public int getDistrict(){
 		return district;
 	}
+
+    public void setTrianglePartyPopulation(int population)
+    {
+        trianglePartyPopulation = population;
+    }public int getTrianglePartyPopulation()
+    {
+        return trianglePartyPopulation;
+    }
+
+    public void setCirclePartyPopulation(int population)
+    {
+        circlePartyPopulation = population;
+    }public int getCirclePatyPopulation()
+    {
+        return circlePartyPopulation;
+    }
+
+    public int getTotalPopulation()
+    {
+        return circlePartyPopulation + trianglePartyPopulation;
+    }
 
     public void setColor(Color color)
     {

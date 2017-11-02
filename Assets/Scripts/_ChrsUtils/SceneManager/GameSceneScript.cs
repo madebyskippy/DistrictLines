@@ -8,7 +8,7 @@ public class GameSceneScript : Scene<TransitionData>
     internal override void OnEnter(TransitionData data)
     {
         //  Use level loader like this
-        Services.LevelLoader.loadLevel(Level.TEXTURETEST);
+        //Services.LevelLoader.loadLevel(Level.TEXTURETEST);
     }
 
     internal override void OnExit()
