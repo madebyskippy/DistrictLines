@@ -22,16 +22,19 @@ public class LevelLoader : MonoBehaviour
         districtMap = map;
     }
 
-    public void loadLevel(Level lvl, Vector2 lvlDimension)
+    public void loadLevel(string lvl, Vector2 lvlDimension)
     {
         Assert.IsNotNull(districtMap, "This district map has not been set for the Level Loader");
 
-        textureMap = Resources.Load<Texture2D>("Levels/"+lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
-                                        + "_" + lvl.ToString());
+        textureMap = Resources.Load<Texture2D>("Levels/"+ lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
+                                        + "_" + lvl);
 
-        for (int x = 0; x < textureMap.width; x++)
+        if (lvl == "MAPTEST")
+            lvlDimension = new Vector2(25, 25);
+
+        for (int x = 0; x < lvlDimension.x; x++)
         {
-            for (int y = 0; y < textureMap.height; y++)
+            for (int y = 0; y < lvlDimension.y; y++)
             {
                 if (textureMap.GetPixel(x, y) != Color.white)
                 {
