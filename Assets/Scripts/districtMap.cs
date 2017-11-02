@@ -76,10 +76,6 @@ public class districtMap : MonoBehaviour {
 
         gridspaces = new List<gridSpace> ();
         gridCoordinates = new gridSpace[rows, cols];
-        
-
-		stats.text = "Circle population is: " + totalPopulation [0];
-		stats.text += "\nTriangle population is: " + totalPopulation [1];
 
         indicators [0].setActive (true);
 
@@ -101,7 +97,10 @@ public class districtMap : MonoBehaviour {
     public void setCountyPopulation(int[] population)
     {
         totalPopulation[0] += population[0];
-        totalPopulation[1] += population[1];
+		totalPopulation[1] += population[1];
+
+		stats.text = "Circle population is: " + totalPopulation [0];
+		stats.text += "\nTriangle population is: " + totalPopulation [1];
     }
 
     public void setGridCoordinates(Vector2 coord, gridSpace county)
