@@ -14,6 +14,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
     [SerializeField] private string selectedLevel = NO_LEVEL_SELECTED;
     [SerializeField] private Vector2 selectedDimensions;
     [SerializeField] private Text feedback;
+	[SerializeField] private ScoreType scoreType;
 
     internal override void OnEnter(TransitionData data)
     {
@@ -35,6 +36,12 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         TransitionData.Instance.dimensions = selectedDimensions;
     }
 
+	public void setScoreType(int type){
+		scoreType = (ScoreType)type;
+		TransitionData.Instance.scoreType = (ScoreType)type;
+
+	}
+
     public void refreshFeedbackText()
     {
         feedback.text = "";
@@ -52,6 +59,8 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         }
         else
         {
+
+			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel((int)scoreType,0,5);
             Services.Scenes.Swap<PrototypeSceneScript>();
         }
 

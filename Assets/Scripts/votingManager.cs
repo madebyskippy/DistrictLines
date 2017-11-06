@@ -7,6 +7,7 @@ public class votingManager : MonoBehaviour {
 
 	[SerializeField] Text resultText;
 	[SerializeField] Text feedbackText;
+	[SerializeField] Text goalText;
 
 	levelManager LM;
 
@@ -29,18 +30,19 @@ public class votingManager : MonoBehaviour {
 	}
 
 	public void score(int i){
+		goalText.text = "Your goal was: "+LM.getInstructions ();
 		districtCount = getDistrictCount ();
 
 		feedbackText.text = "group 1 had "+totalPopulation[0]+" people and group 2 had "+totalPopulation[1]+" people.\n";
 
 		switch (i) {
-		case 1:
+		case 0:
 			isResultGood = isWellRepresented ();
 			break;
-		case 2:
+		case 1:
 			isResultGood = isMinorityWins ();
 			break;
-		case 3:
+		case 2:
 			isResultGood = isMajorityLandslide ();
 			break;
 		}

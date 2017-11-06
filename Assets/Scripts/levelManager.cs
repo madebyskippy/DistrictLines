@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ScoreType {WellRepresented, MinorityWin, MajorityLandslide};
+
 public class levelManager : MonoBehaviour {
 
 	/*
@@ -18,10 +20,6 @@ public class levelManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-		//TEMPORARY FOR TESTING! should be set by the level loader
-
-		setLevel(Random.Range(1,4),0,5);
 
 	}
 	
@@ -55,13 +53,13 @@ public class levelManager : MonoBehaviour {
 	public string getInstructions(){
 		string instruc = "";
 		switch (scoreType) {
-		case 1:
+		case 0:
 			instruc = "make sure the final districts represent the population well!";
 			break;
-		case 2:
+		case 1:
 			instruc = "can you get the minority group to win?";
 			break;
-		case 3:
+		case 2:
 			instruc = "make sure the majority wins by a landslide.";
 			break;
 		}

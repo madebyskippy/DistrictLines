@@ -19,6 +19,7 @@ public class TransitionData
 
     public string lvl;
     public Vector2 dimensions;
+	public ScoreType scoreType;
     
 }
 
