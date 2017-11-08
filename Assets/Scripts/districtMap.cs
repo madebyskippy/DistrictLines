@@ -237,6 +237,7 @@ public class districtMap : MonoBehaviour {
 				}
                 //ok now set the district and increase the count
                 // check if continuos
+//				int objectPreviousDistrict = objectHit.getDistrict();
                 objectHit.setDistrict(currentDistrict);
                 if (isContinuous(objectHit))
                 {
@@ -248,7 +249,7 @@ public class districtMap : MonoBehaviour {
                 {
 					feedback.color = Color.red;
 					feedback.text = "Selection is not continuous with current district.";
-                    objectHit.setDistrict(-1);
+					objectHit.setDistrict(-1);
                 }
 			}
 		}
@@ -272,37 +273,33 @@ public class districtMap : MonoBehaviour {
 		bool allSpacesAssigned = true;
 		for (int i = 0; i < gridspaces.Count; i++)
 		{
-            if (gridspaces[i] != null) break;
-			if (gridspaces[i].getDistrict() == -1)
-			{
-				feedback.color = Color.red;
-				feedback.text = "Some people have not been assigned a district.";
-				Debug.Log("Some people have not been assined a district");
-				allSpacesAssigned = false;
-				break;
+			if (gridspaces [i] != null) {
+				if (gridspaces [i].getDistrict () == -1) {
+					feedback.color = Color.red;
+					feedback.text = "Some people have not been assigned a district.";
+					Debug.Log ("Some people have not been assined a district");
+					Debug.Log (i + ", " + gridspaces [i].gridPos.x + ", " + gridspaces [i].gridPos.y);
+					allSpacesAssigned = false;
+					break;
+				}
 			}
 
             
 		}
 
-        for(int i = 0; i < districtColors.Length; i++)
-        {
-            Debug.Log("District " + i + ": " + getDistrictTotalPopulation(i));
-        }
-
-		if(populationDistributionIsValid() && allSpacesAssigned)
+		if(allSpacesAssigned)
 		{
-			Debug.Log("Population Distribution looks pretty good! Now let's vote!");
-			analyze ();
-		}
-		else
-		{
-			if (feedback.text != "") {
-				feedback.text += "\n";
+			if (populationDistributionIsValid ()) {
+				Debug.Log("Population Distribution looks pretty good! Now let's vote!");
+				analyze ();
+			} else {
+				if (feedback.text != "") {
+					feedback.text += "\n";
+				}
+				feedback.color = Color.red;
+				feedback.text += "One district has too many people.";
+				Debug.Log("One district has too many people");
 			}
-			feedback.color = Color.red;
-			feedback.text += "One district has too many people.";
-			Debug.Log("One district has too many people");
 		}
 	}
 
