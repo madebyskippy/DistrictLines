@@ -60,7 +60,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         else
         {
 
-			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel((int)scoreType,0,5);
+			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel((int)scoreType,0,3);
             Services.Scenes.Swap<PrototypeSceneScript>();
         }
 

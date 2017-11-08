@@ -14,7 +14,7 @@ public class districtMap : MonoBehaviour {
 	//the colors that represent the two groups
 	[SerializeField] Color[] colors;
 
-	[SerializeField] int numDistricts;
+	int numDistricts;
 
 	//starting out with a square map of a set size
 	//this is a serializefield so that we can make adjustments as we prototype.
@@ -54,6 +54,7 @@ public class districtMap : MonoBehaviour {
 	// Use this for initialization
 	public void init () {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
+		numDistricts = LM.getNumDistricts ();
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
 		totalPopulation = new int[]{0,0};
