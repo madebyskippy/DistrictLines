@@ -116,31 +116,21 @@ public class districtMap : MonoBehaviour {
     {
         //  Add all the members of each party in
         //  the district we are checking.
-        int population = 0;
-        for (int i = 0; i < colors.Length; i++)
-        {
-            population += districtMakeup[i][districtNumber];
-        }
         //  If the population is less than 1, the district is empty
-        return population < 1;
+        return getDistrictTotalPopulation(districtNumber) < 1;
     }
 
     public int getDistrictTotalPopulation(int districtNumber)
     {
-        // If the district is empty, its population is 0
-        if (isDistrictEmpty(districtNumber)) return 0;
-        else
+        //  Otherwise we add all the members of each party
+        //  in the district we are counting to its population
+        int population = 0;
+        foreach (gridSpace county in gridspaces)
         {
-            //  Otherwise we add all the members of each party
-            //  in the district we are counting to its population
-            int population = 0;
-            foreach(gridSpace county in gridspaces)
-            {
-                if(county.getDistrict() == districtNumber)
-                    population += county.getTotalPopulation();
-            }
-            return population;
+            if (county.getDistrict() == districtNumber)
+                population += county.getTotalPopulation();
         }
+        return population;
     }
 
     private bool isContinuous(gridSpace gridSpace)
@@ -162,16 +152,16 @@ public class districtMap : MonoBehaviour {
 
             //  Compares the district of the adjacent spaces if withing bounds
             if (north < rows && gridCoordinates[(int)gridSpace.gridPos.x, (int)north] != null)
-                northIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)north].getDistrict() == gridSpace.getDistrict();
+                northIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)north].getDistrict() == currentDistrict;
 
             if (south > -1 && gridCoordinates[(int)gridSpace.gridPos.x, (int)south] != null)
-                southIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)south].getDistrict() == gridSpace.getDistrict();
+                southIsContinuous = gridCoordinates[(int)gridSpace.gridPos.x, (int)south].getDistrict() == currentDistrict;
 
             if (east < cols && gridCoordinates[(int)east, (int)gridSpace.gridPos.y] != null)
-                eastIsContinuous = gridCoordinates[(int)east, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
+                eastIsContinuous = gridCoordinates[(int)east, (int)gridSpace.gridPos.y].getDistrict() == currentDistrict;
 
             if (west > -1 && gridCoordinates[(int)west, (int)gridSpace.gridPos.y] != null)
-                westIsContinuous = gridCoordinates[(int)west, (int)gridSpace.gridPos.y].getDistrict() == gridSpace.getDistrict();
+                westIsContinuous = gridCoordinates[(int)west, (int)gridSpace.gridPos.y].getDistrict() == currentDistrict;
 
             //  If at least one space is continuous, we can add the gridspace to the current party
             return northIsContinuous || southIsContinuous || eastIsContinuous || westIsContinuous;
@@ -197,7 +187,6 @@ public class districtMap : MonoBehaviour {
         return highestPopulation - lowestPopulation < MAX_POPULATION_DIFFERENCE;
     }
 
-
     // Update is called once per frame
     void Update () {
         
@@ -212,10 +201,17 @@ public class districtMap : MonoBehaviour {
 			nextDistrict(true);
 		}
 
+        if( Input.GetKeyDown(KeyCode.Space))
+        {
+            for(int i = 0; i < numDistricts; i++)
+            {
+                Debug.Log("District: " + i + " | Population: " + getDistrictTotalPopulation(i));
+            }
+        }
+
 		if (Input.GetAxis ("Mouse ScrollWheel") != 0) {
 			if (!haveScrolled) {
 				float scroll = Input.GetAxis ("Mouse ScrollWheel");
-//				Debug.Log (scroll);
 				nextDistrict((scroll > 0));
 				haveScrolled = true;
 			}
@@ -238,19 +234,22 @@ public class districtMap : MonoBehaviour {
 				}
                 //ok now set the district and increase the count
                 // check if continuos
-//				int objectPreviousDistrict = objectHit.getDistrict();
-                objectHit.setDistrict(currentDistrict);
+				int objectPreviousDistrict = objectHit.getDistrict();
+
                 if (isContinuous(objectHit))
                 {
+                    objectHit.setDistrict(currentDistrict);
                     objectHit.setColor(districtColors[currentDistrict]);
 					districtMakeup[objectHit.getGroup()][currentDistrict]++;
-					feedback.text = "";
+					feedback.text = "";          
                 }
                 else
                 {
-					feedback.color = Color.red;
-					feedback.text = "Selection is not continuous with current district.";
-					objectHit.setDistrict(-1);
+                    if (objectHit.getDistrict() != currentDistrict)
+                    {
+                        feedback.color = Color.red;
+                        feedback.text = "Selection is not continuous with current district.";
+                    }
                 }
 			}
 		}
@@ -258,15 +257,22 @@ public class districtMap : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0)) {
 			isSelecting = false;
 
-			//this is for UI display
-			for (int i = 0; i < numDistricts; i++) {
-				indicators [i].setGroups (districtMakeup [0] [i],districtMakeup [1] [i]);
-				indicators [i].setPopulation (getDistrictTotalPopulation (i));
-			}
-            
-		}
+            UpdatePopulations();
+
+
+        }
 
 	}
+
+    public void UpdatePopulations()
+    {
+        //this is for UI display
+        for (int i = 0; i < numDistricts; i++)
+        {
+            indicators[i].setGroups(districtMakeup[0][i], districtMakeup[1][i]);
+            indicators[i].setPopulation(getDistrictTotalPopulation(i));
+        }
+    }
 
 	//finished redistricting
 	public void submit(){
@@ -279,7 +285,7 @@ public class districtMap : MonoBehaviour {
 					feedback.color = Color.red;
 					feedback.text = "Some people have not been assigned a district.";
 					Debug.Log ("Some people have not been assined a district");
-					Debug.Log (i + ", " + gridspaces [i].gridPos.x + ", " + gridspaces [i].gridPos.y);
+					Debug.Log (gridspaces [i].gridPos.x + ", " + gridspaces [i].gridPos.y);
 					allSpacesAssigned = false;
 					break;
 				}

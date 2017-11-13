@@ -26,7 +26,7 @@ public class LevelLoader : MonoBehaviour
     {
         Assert.IsNotNull(districtMap, "This district map has not been set for the Level Loader");
 
-        textureMap = Resources.Load<Texture2D>("Levels/"+ lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
+        textureMap = Resources.Load<Texture2D>("Levels/"+ 16 + "x" + 16
                                         + "_" + lvl);
 
         if (lvl == "MAPTEST")
@@ -41,7 +41,8 @@ public class LevelLoader : MonoBehaviour
                     //  Do something or nothing
                     gridSpace space = Instantiate(districtMap.getCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<gridSpace>();
                     space.transform.parent = Services.Scenes.CurrentScene.transform;
-                    int totalInArea = Random.Range(1, 10); //total of 9 "people"
+                    space.name = "County: " + x + ", " + y;
+                    int totalInArea = Random.Range(1, 6); //total of 9 "people"
                     int firstGroup = Random.Range(0, totalInArea);
                     if (firstGroup == totalInArea / 2.0f)
                     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class gridSpace : MonoBehaviour {
 
-    private int district;
+    [SerializeField] private int district;
     private int[] partyCount;
 
     private int trianglePartyPopulation;
