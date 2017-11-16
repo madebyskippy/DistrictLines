@@ -42,7 +42,7 @@ public class LevelLoader : MonoBehaviour
                     gridSpace space = Instantiate(districtMap.getCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<gridSpace>();
                     space.transform.parent = Services.Scenes.CurrentScene.transform;
                     space.name = "County: " + x + ", " + y;
-                    int totalInArea = Random.Range(1, 6); //total of 9 "people"
+                    int totalInArea = Random.Range(1, 4); //total of 9 "people"
                     int firstGroup = Random.Range(0, totalInArea);
                     if (firstGroup == totalInArea / 2.0f)
                     {

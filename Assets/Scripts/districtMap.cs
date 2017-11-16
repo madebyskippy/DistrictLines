@@ -58,6 +58,7 @@ public class districtMap : MonoBehaviour {
 		//start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
 		totalPopulation = new int[]{0,0};
+
 		indicators = new districtIndicator[numDistricts];
 		for (int i = 0; i < numDistricts; i++) {
 			districtMakeup[0] [i] = 0;
@@ -83,7 +84,9 @@ public class districtMap : MonoBehaviour {
 		goalText.text = "GOAL: "+LM.getInstructions ();
 
 		feedback.text = "";
-	}
+
+        
+    }
 
     public GameObject getCountryPrefab()
     {
@@ -102,6 +105,7 @@ public class districtMap : MonoBehaviour {
 
 		stats.text = "Circle population is: " + totalPopulation [0];
 		stats.text += "\nTriangle population is: " + totalPopulation [1];
+        MAX_POPULATION_DIFFERENCE = (int)((totalPopulation[0] + totalPopulation[1]) * 0.05f);
     }
 
     public void setGridCoordinates(Vector2 coord, gridSpace county)
@@ -133,12 +137,104 @@ public class districtMap : MonoBehaviour {
         return population;
     }
 
+    public int getDistrictCirclePopulation(int districtNumber)
+    {
+        //  Otherwise we add all the members of each party
+        //  in the district we are counting to its population
+        int population = 0;
+        foreach (gridSpace county in gridspaces)
+        {
+            if (county.getDistrict() == districtNumber)
+                population += county.getCirclePatyPopulation();
+        }
+        return population;
+    }
+
+
+    public int getDistrictTrianglePopulation(int districtNumber)
+    {
+        //  Otherwise we add all the members of each party
+        //  in the district we are counting to its population
+        int population = 0;
+        foreach (gridSpace county in gridspaces)
+        {
+            if (county.getDistrict() == districtNumber)
+                population += county.getTrianglePartyPopulation();
+        }
+        return population;
+    }
+
+    /*
+     *      1: Gather all nodes of a district
+     *      2: For the first node check all adjacent spaces
+     *      3: Add adjacent spaces with the same county to spacesToBeChecked list
+     *      4: If adjacent space has the same district add it to clump
+     *      5: Add space to list of checkedSpaces
+     *      5: Search the next space in spacesToBeChecked
+     *      6: Remove item 
+     *      6: End if node space
+     */
+    public bool confirmContinuity(int districtNumnber)
+    {
+        if (isDistrictEmpty(districtNumnber)) return true;
+
+        bool isContinuous = false;
+
+        List<gridSpace> districtList = new List<gridSpace>();
+        foreach(gridSpace county in gridspaces)
+        {
+            if(county.getDistrict() == districtNumnber)
+            {
+                districtList.Add(county);
+            }
+        }
+
+        /*
+           List<Polyomino> piecesToCheck = new List<Polyomino>();
+           foreach (Tile tile in piece.tiles)
+           {
+               foreach (Coord direction in Coord.Directions())
+            {
+                Coord adjacentCoord = tile.coord.Add(direction);
+                if (IsCoordContainedInMap(adjacentCoord))
+                {
+                    Tile adjTile = Map[adjacentCoord.x, adjacentCoord.y];
+                    if (adjTile.IsOccupied() &&
+                        adjTile.occupyingPiece.owner == piece.owner &&
+                        adjTile.occupyingPiece != piece &&
+                        adjTile.occupyingPiece.buildingType == BuildingType.BASE)
+                    {
+                        return true;
+                    }
+         */
+
+
+       
+
+        return isContinuous;
+    }
+
     private bool isContinuous(gridSpace gridSpace)
     {
         //  If the district is empty, it is continuous
+        //  To stop islanding run a continuity check for all districts before setting one
+        
+        //  Check if all districts are empty
+        //  Check if current district is empty
+        //  Check if adjacent spots are continuous
         if (isDistrictEmpty(currentDistrict)) return true;
         else
         {
+            /*
+            for (int i  = 0; i < numDistricts; i++)
+            {
+                if (confirmContinuity(i))
+                    return true;
+                else
+                    return false;
+            }
+            */
+
             //  Get the N, S, E, W spaces of the map
             float north     = gridSpace.gridPos.y + 1;
             float south     = gridSpace.gridPos.y - 1;
@@ -241,7 +337,8 @@ public class districtMap : MonoBehaviour {
                     objectHit.setDistrict(currentDistrict);
                     objectHit.setColor(districtColors[currentDistrict]);
 					districtMakeup[objectHit.getGroup()][currentDistrict]++;
-					feedback.text = "";          
+                    UpdatePopulations();
+                    feedback.text = "";          
                 }
                 else
                 {
@@ -257,7 +354,7 @@ public class districtMap : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0)) {
 			isSelecting = false;
 
-            UpdatePopulations();
+            //UpdatePopulations();
 
 
         }
@@ -269,8 +366,11 @@ public class districtMap : MonoBehaviour {
         //this is for UI display
         for (int i = 0; i < numDistricts; i++)
         {
-            indicators[i].setGroups(districtMakeup[0][i], districtMakeup[1][i]);
-            indicators[i].setPopulation(getDistrictTotalPopulation(i));
+            int circlePopulation = getDistrictCirclePopulation(i);
+            int trianglePopulation = getDistrictTrianglePopulation(i);
+            indicators[i].setGroups(circlePopulation, trianglePopulation);
+            int population = getDistrictTotalPopulation(i);
+            indicators[i].setPopulation(population);
         }
     }
 
