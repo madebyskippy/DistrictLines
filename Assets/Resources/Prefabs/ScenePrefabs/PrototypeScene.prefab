@@ -462,7 +462,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MAX_POPULATION_DIFFERENCE: 50
-  cube: {fileID: 1966789702551746, guid: 6f480c91265e64a0599d81031eedcd17, type: 2}
+  countyPrefab: {fileID: 1966789702551746, guid: 6f480c91265e64a0599d81031eedcd17,
+    type: 2}
   colors:
   - {r: 1, g: 0.95182556, b: 0.30147058, a: 1}
   - {r: 0.6097363, g: 1, b: 0.45588237, a: 1}

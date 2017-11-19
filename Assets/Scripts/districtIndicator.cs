@@ -3,59 +3,67 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class districtIndicator : MonoBehaviour {
+public class DistrictIndicator : MonoBehaviour
+{
 
 	[SerializeField] GameObject label;
 	[SerializeField] Text labeltext;
 	[SerializeField] Text poptext;
 	[SerializeField] GameObject[] groups;
 
+    [SerializeField] public int totalPopulation { get; private set; }
+
 	bool isActive;
 
 	// Use this for initialization
-	void Start () {
-		groups [0].transform.localScale = Vector3.zero;
-		groups [1].transform.localScale = Vector3.zero;
+	void Start ()
+    {
+		groups [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
+		groups [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
 		isActive = false;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	public void setLabel(Color c, string l){
+	public void SetLabel(Color c, string l)
+    {
 		label.GetComponent<Image>().color = c;
 		labeltext.text = l;
 	}
 
-	public void setActive(bool a){
+	public void SetActive(bool a)
+    {
 		isActive = a;
-		if (isActive) {
+		if (isActive)
+        {
 			label.transform.localScale = new Vector3(1.75f,1f,1f);
 			labeltext.color = Color.white;
 			labeltext.fontStyle = FontStyle.Bold;
-		} else {
+		}
+        else
+        {
 			label.transform.localScale = Vector3.one;
 			labeltext.color = Color.black;
 			labeltext.fontStyle = FontStyle.Normal;
 		}
 	}
 
-	public void setGroups(float levelA, float levelB){
-		float total = levelA + levelB;
-        float ratio = levelA / total;
-        if (total == 0) { 
-			groups [0].transform.localScale = Vector3.zero;
-			groups [1].transform.localScale = Vector3.zero;
+	public void SetPopulationBar(float districtCirclePopulation, float disrictTrianglePopulation)
+    {
+		float total = districtCirclePopulation + disrictTrianglePopulation;
+        float ratio = districtCirclePopulation / total;
+
+        if (total == 0)
+        { 
+			groups [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
+			groups [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
 		} else {
             
-            groups [0].transform.localScale = new Vector3 (ratio, 1f, 1f);
-			groups [1].transform.localScale = new Vector3 (1f, 1f, 1f);
+            groups [(int)PoliticalParty.CIRCLE].transform.localScale = new Vector3 (ratio, 1f, 1f);
+			groups [(int)PoliticalParty.TRIANGLE].transform.localScale = new Vector3 (1f, 1f, 1f);
 		}
 	}
 
-	public void setPopulation(int p){
+	public void SetTotalPopulationText(int p)
+    {
 		poptext.text = p.ToString ();
 	}
 }

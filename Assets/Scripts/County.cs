@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class gridSpace : MonoBehaviour {
+public class County : MonoBehaviour {
 
     [SerializeField] private int district;
     private int[] partyCount;
@@ -76,27 +76,41 @@ public class gridSpace : MonoBehaviour {
         transform.position = newPos;
     }
 
-	public void setGroups(Vector2 groups){
+	public void setGroups(Vector2 groups)
+    {
 		partyCount[0] = (int)groups.x;
 		partyCount[1] = (int)groups.y;
 		displayClumps ();
-	}public void setGroups(int g1, int g2){
+	}
+
+    public void setGroups(int g1, int g2)
+    {
 		partyCount[0] = g1;
 		partyCount[1] = g2;
 		displayClumps();
-	}public int getGroup(){
-		if (partyCount[0] > partyCount[1]){
+	}
+
+    public int getGroup()
+    {
+		if (partyCount[0] > partyCount[1])
+        {
 			return 0;
-		}else if (partyCount[0] < partyCount[1]){
+		}
+        else if (partyCount[0] < partyCount[1])
+        {
 			return 1;
 		}
 		return -1; //tie
 	}
 
 
-	public void setDistrict(int d){
+	public void setDistrict(int d)
+    {
 		district = d;
-	}public int getDistrict(){
+	}
+
+    public int getDistrict()
+    {
 		return district;
 	}
 
