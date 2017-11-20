@@ -9,6 +9,7 @@ public class districtIndicator : MonoBehaviour {
 	[SerializeField] Text labeltext;
 	[SerializeField] Text poptext;
 	[SerializeField] GameObject[] groups;
+	[SerializeField] Button labelButton;
 
 	bool isActive;
 
@@ -25,18 +26,20 @@ public class districtIndicator : MonoBehaviour {
 	}
 
 	public void setLabel(Color c, string l){
-		label.GetComponent<Image>().color = c;
 		labeltext.text = l;
+		labelButton.image.color = c;
+		labelButton.transform.GetChild (0).GetComponent<Text> ().text = l;
 	}
 
 	public void setActive(bool a){
 		isActive = a;
 		if (isActive) {
-			label.transform.localScale = new Vector3(1.75f,1f,1f);
+			labelButton.transform.localScale = new Vector3(1.75f,1f,1f);
 			labeltext.color = Color.white;
 			labeltext.fontStyle = FontStyle.Bold;
+			labelButton.transform.GetChild (0).transform.localScale = new Vector3 (0.57f, 1f, 1f);
 		} else {
-			label.transform.localScale = Vector3.one;
+			labelButton.transform.localScale = Vector3.one;
 			labeltext.color = Color.black;
 			labeltext.fontStyle = FontStyle.Normal;
 		}
