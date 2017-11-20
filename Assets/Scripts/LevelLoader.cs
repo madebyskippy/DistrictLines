@@ -15,9 +15,9 @@ public class LevelLoader : MonoBehaviour
     public Texture2D textureMap;
 
 
-    private districtMap districtMap;
+    private DistrictMap districtMap;
 
-    public void setDistrictMap(districtMap map)
+    public void setDistrictMap(DistrictMap map)
     {
         districtMap = map;
     }
@@ -39,10 +39,10 @@ public class LevelLoader : MonoBehaviour
                 if (textureMap.GetPixel(x, y) != Color.white)
                 {
                     //  Do something or nothing
-                    gridSpace space = Instantiate(districtMap.getCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<gridSpace>();
+                    County space = Instantiate(districtMap.GetCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<County>();
                     space.transform.parent = Services.Scenes.CurrentScene.transform;
                     space.name = "County: " + x + ", " + y;
-                    int totalInArea = Random.Range(1, 6); //total of 9 "people"
+                    int totalInArea = Random.Range(1, 4); //total of 9 "people"
                     int firstGroup = Random.Range(0, totalInArea);
                     if (firstGroup == totalInArea / 2.0f)
                     {
@@ -58,8 +58,8 @@ public class LevelLoader : MonoBehaviour
                     space.setCirclePartyPopulation(firstGroup);
                     space.setTrianglePartyPopulation((totalInArea - firstGroup));
 
-                    districtMap.addGridSpaceToMap(space);
-                    districtMap.setGridCoordinates(new Vector2(x, y), space);
+                    districtMap.AddGridSpaceToMap(space);
+                    districtMap.SetGridCoordinates(new Vector2(x, y), space);
                     districtMap.setCountyPopulation(new int[] { firstGroup, (totalInArea - firstGroup) });
                 }
                 else
