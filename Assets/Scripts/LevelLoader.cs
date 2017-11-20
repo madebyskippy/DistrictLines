@@ -61,6 +61,7 @@ public class LevelLoader : MonoBehaviour
                     districtMap.AddGridSpaceToMap(space);
                     districtMap.SetGridCoordinates(new Vector2(x, y), space);
                     districtMap.setCountyPopulation(new int[] { firstGroup, (totalInArea - firstGroup) });
+                    districtMap.SetMaxPopulationDifference();
                 }
                 else
                 {

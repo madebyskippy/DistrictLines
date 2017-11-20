@@ -15,10 +15,14 @@ public class PrototypeSceneScript : Scene<TransitionData>
 
     internal override void OnEnter(TransitionData data)
     {
-       districtMap = GameObject.Find("DistrictMap").GetComponent<DistrictMap>();
-       districtMap.Init();
-       Services.LevelLoader.setDistrictMap(districtMap);
-       Services.LevelLoader.loadLevel(TransitionData.Instance.lvl, TransitionData.Instance.dimensions);
+        if (!Services.GameManager.savePreviousScene)
+        {
+            districtMap = GameObject.Find("DistrictMap").GetComponent<DistrictMap>();
+            districtMap.Init();
+            Services.LevelLoader.setDistrictMap(districtMap);
+            Services.LevelLoader.loadLevel(TransitionData.Instance.lvl, TransitionData.Instance.dimensions);
+            Services.GameManager.SaveScene();
+        }
     }
 
     internal override void OnExit()
@@ -27,7 +31,7 @@ public class PrototypeSceneScript : Scene<TransitionData>
     }
 
 	public void ChangeScene(){
-		Services.Scenes.Swap<VotingSceneScript>();
+		Services.Scenes.PushScene<VotingSceneScript>();
 	}
 
     // Update is called once per frame

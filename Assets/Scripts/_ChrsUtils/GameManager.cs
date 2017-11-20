@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 
+    public bool savePreviousScene { get; private set; }
+
     public KeyCode restartPrototype = KeyCode.R;
 
     [SerializeField] private int _numPlayers;
@@ -51,6 +53,16 @@ public class GameManager : MonoBehaviour
     private void RestartPrototype()
     {
         SceneManager.LoadScene("prototype");
+    }
+
+    public void PrepareToSaveScene()
+    {
+        savePreviousScene = false;
+    }
+
+    public void SaveScene()
+    {
+        savePreviousScene = true;
     }
 
 	// Update is called once per frame

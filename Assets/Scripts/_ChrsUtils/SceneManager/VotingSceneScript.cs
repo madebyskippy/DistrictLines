@@ -12,11 +12,16 @@ public class VotingSceneScript : Scene<TransitionData>
 
 	internal override void OnExit()
 	{
-
 	}
 
-	// Update is called once per frame
-	void Update () {
+    public void PlayAgain()
+    {
+        Services.GameManager.PrepareToSaveScene();
+        Services.Scenes.Swap<LevelSelectSceneScript>();
+    }
 
-	}
+    public void Back()
+    {
+        Services.Scenes.PopScene();
+    }
 }

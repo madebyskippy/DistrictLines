@@ -6,7 +6,7 @@ public enum PoliticalParty { CIRCLE = 0, TRIANGLE }
 
 public class DistrictMap : MonoBehaviour {
 
-    [SerializeField] int MAX_POPULATION_DIFFERENCE;
+    [SerializeField] float MAX_POPULATION_DIFFERENCE;
 
     //each grid space represented by a cube
     [SerializeField] GameObject countyPrefab;
@@ -40,7 +40,7 @@ public class DistrictMap : MonoBehaviour {
 	//e.g. districtMakeup[(int)PoliticalParty.Circle][0] is how many people are in group A in district 1.
 	//	   districtMakeup[(int)PoltiicalParty.Triangle][0] is how many people are in group B in district 1.
 	public int[][] districtMakeup;
-	int[] totalPopulation;
+	public int[] totalPopulation;
 	//for user input and UI
 	bool haveScrolled = false;
 	bool isSelecting = false; //whether or not the mouse is down and you're selecting
@@ -88,6 +88,8 @@ public class DistrictMap : MonoBehaviour {
 		goalText.text = "GOAL: "+ LM.getInstructions ();
 
 		feedback.text = "";
+        Debug.Log(totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]);
+        
     }
 
     public Vector2[] Directions()
@@ -140,8 +142,13 @@ public class DistrictMap : MonoBehaviour {
 		stats.text = "Circle population is: " + totalPopulation [(int)PoliticalParty.CIRCLE];
 		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];
 
+        
+    }
+
+    public void SetMaxPopulationDifference()
+    {
         //  Display this on the screen
-        MAX_POPULATION_DIFFERENCE = (int)((totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]) * 0.05f);
+        MAX_POPULATION_DIFFERENCE = Mathf.RoundToInt((totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]) * 0.05f);
     }
 
     public void SetGridCoordinates(Vector2 coord, County county)
@@ -341,7 +348,7 @@ public class DistrictMap : MonoBehaviour {
                 highestPopulation = population;
             }
         }
-        return highestPopulation - lowestPopulation < MAX_POPULATION_DIFFERENCE;
+        return highestPopulation - lowestPopulation <= MAX_POPULATION_DIFFERENCE;
     }
 
     // Update is called once per frame
