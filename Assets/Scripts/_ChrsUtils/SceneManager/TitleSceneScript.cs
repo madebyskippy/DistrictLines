@@ -37,9 +37,13 @@ public class TitleSceneScript : Scene<TransitionData>
     private void Update()
     {
         _tm.Update();
-        if (Input.GetMouseButtonDown(LEFT_CLICK))
-        {
-            StartGame();
-        }
+//        if (Input.GetMouseButtonDown(LEFT_CLICK))
+//        {
+//            StartGame();
+//        }
     }
+
+	public void StartButtonClick(){
+		StartGame ();
+	}
 }
