@@ -32,6 +32,8 @@ public class LevelLoader : MonoBehaviour
         if (lvl == "MAPTEST")
             lvlDimension = new Vector2(25, 25);
 
+        Random.InitState(System.DateTime.Now.DayOfYear);
+
         for (int x = 0; x < lvlDimension.x; x++)
         {
             for (int y = 0; y < lvlDimension.y; y++)
@@ -42,7 +44,7 @@ public class LevelLoader : MonoBehaviour
                     County space = Instantiate(districtMap.GetCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<County>();
                     space.transform.parent = Services.Scenes.CurrentScene.transform;
                     space.name = "County: " + x + ", " + y;
-                    int totalInArea = Random.Range(1, 4); //total of 9 "people"
+                    int totalInArea = Random.Range(1, 4); //total of 5 "people"
                     int firstGroup = Random.Range(0, totalInArea);
                     if (firstGroup == totalInArea / 2.0f)
                     {
@@ -66,7 +68,6 @@ public class LevelLoader : MonoBehaviour
                 else
                 {
                     //  Do something else or nothing
-                    Debug.Log("Not White");
                 }
             }
         }

@@ -162,7 +162,7 @@ public class DistrictMap : MonoBehaviour {
 		totalPopulation[(int)PoliticalParty.TRIANGLE] += population[(int)PoliticalParty.TRIANGLE];
 
 		stats.text = "Circle population is: " + totalPopulation [(int)PoliticalParty.CIRCLE];
-		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];   
+		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];
     }
 
     public void SetMaxPopulationDifference()
@@ -391,8 +391,6 @@ public class DistrictMap : MonoBehaviour {
                 // check if continuos
 				int objectPreviousDistrict = objectHit.getDistrict();
 
-                Debug.Log("Prev district: " + objectPreviousDistrict);
-
                 if (IsContinuous(objectHit))
                 {
 
@@ -429,8 +427,6 @@ public class DistrictMap : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0))
         {
 			isSelecting = false;
-
-            //UpdatePopulations();
         }
 	}
 
