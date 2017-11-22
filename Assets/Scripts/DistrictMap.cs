@@ -15,6 +15,8 @@ public class DistrictMap : MonoBehaviour {
 	[SerializeField] Color[] colors;
 
 	int numDistricts;
+    int mostPopulated;
+    int leastPopulated;
 
 	//starting out with a square map of a set size
 	//this is a serializefield so that we can make adjustments as we prototype.
@@ -62,6 +64,8 @@ public class DistrictMap : MonoBehaviour {
 		totalPopulation = new int[]{0,0};
 
 		indicators = new DistrictIndicator[numDistricts];
+        mostPopulated = 0;
+        leastPopulated = 0;
 		for (int i = 0; i < numDistricts; i++)
         {
 			districtMakeup[(int)PoliticalParty.CIRCLE] [i] = 0;
@@ -326,15 +330,18 @@ public class DistrictMap : MonoBehaviour {
     {
         int lowestPopulation = int.MaxValue;
         int highestPopulation = int.MinValue;
+
         for (int i = 0; i < numDistricts; i++)
         {
             int population = GetDistrictTotalPopulation(i);
             if(population < lowestPopulation)
             {
+                leastPopulated = i;
                 lowestPopulation = population;
             }
             if(highestPopulation < population)
             {
+                mostPopulated = i;
                 highestPopulation = population;
             }
         }
@@ -357,7 +364,22 @@ public class DistrictMap : MonoBehaviour {
             }
         }
 
-		if (Input.GetAxis ("Mouse ScrollWheel") != 0)
+        if(!PopulationDistributionIsValid())
+        {
+            //  Makes most populated district number smaller and gray
+            indicators[mostPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(mostPopulated), Mathf.RoundToInt(indicators[mostPopulated].defaultPopFontSize * 0.80f), Color.gray);
+            //  Makes the least populated district number bigger and red
+            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.33f), Color.red);
+        }
+        else
+        {
+            for (int i = 0; i < numDistricts; i++)
+            {
+                indicators[i].SetTotalPopulationText(GetDistrictTotalPopulation(i));
+            }
+        }
+
+        if (Input.GetAxis ("Mouse ScrollWheel") != 0)
         {
 			if (!haveScrolled)
             {
