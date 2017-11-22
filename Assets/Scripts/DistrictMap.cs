@@ -326,7 +326,7 @@ public class DistrictMap : MonoBehaviour {
     {
         int lowestPopulation = int.MaxValue;
         int highestPopulation = int.MinValue;
-        for (int i = 0; i < colors.Length; i++)
+        for (int i = 0; i < numDistricts; i++)
         {
             int population = GetDistrictTotalPopulation(i);
             if(population < lowestPopulation)
