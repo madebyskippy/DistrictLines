@@ -348,6 +348,24 @@ public class DistrictMap : MonoBehaviour {
         return highestPopulation - lowestPopulation <= MAX_POPULATION_DIFFERENCE;
     }
 
+    void ValidatePopulationDistributionForUI()
+    {
+        if (!PopulationDistributionIsValid())
+        {
+            //  Makes most populated district number smaller and gray
+            indicators[mostPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(mostPopulated), Mathf.RoundToInt(indicators[mostPopulated].defaultPopFontSize * 0.80f), Color.gray);
+            //  Makes the least populated district number bigger and red
+            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.33f), Color.red);
+        }
+        else
+        {
+            for (int i = 0; i < numDistricts; i++)
+            {
+                indicators[i].SetTotalPopulationText(GetDistrictTotalPopulation(i));
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update ()
     {   
@@ -364,20 +382,7 @@ public class DistrictMap : MonoBehaviour {
             }
         }
 
-        if(!PopulationDistributionIsValid())
-        {
-            //  Makes most populated district number smaller and gray
-            indicators[mostPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(mostPopulated), Mathf.RoundToInt(indicators[mostPopulated].defaultPopFontSize * 0.80f), Color.gray);
-            //  Makes the least populated district number bigger and red
-            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.33f), Color.red);
-        }
-        else
-        {
-            for (int i = 0; i < numDistricts; i++)
-            {
-                indicators[i].SetTotalPopulationText(GetDistrictTotalPopulation(i));
-            }
-        }
+        ValidatePopulationDistributionForUI();
 
         if (Input.GetAxis ("Mouse ScrollWheel") != 0)
         {
