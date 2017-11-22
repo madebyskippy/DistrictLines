@@ -31,6 +31,7 @@ public class DistrictMap : MonoBehaviour {
 	[SerializeField] Text instructions;
 	[SerializeField] Text goalText;
 	[SerializeField] Text stats;
+    [SerializeField] Text clearCurrentDistrictButton;
 
 	//list of all the game spaces
 	List<County> allCounties;
@@ -88,7 +89,8 @@ public class DistrictMap : MonoBehaviour {
 		goalText.text = "GOAL: "+ LM.getInstructions ();
 
 		feedback.text = "";
-
+        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
         Services.EventManager.Register<KeyPressed>(OnKeyPressed);
     }
 
@@ -552,6 +554,7 @@ public class DistrictMap : MonoBehaviour {
         }
 
         indicators[currentDistrict].SetActive(true);
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
     }
 
 	void NextDistrict(bool isUp)
@@ -568,6 +571,7 @@ public class DistrictMap : MonoBehaviour {
 			currentDistrict += numDistricts;
 		}
 		indicators [currentDistrict].SetActive(true);
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
 	}
 
 	//sets up the grid of the map
