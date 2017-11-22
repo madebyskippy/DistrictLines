@@ -88,8 +88,18 @@ public class DistrictMap : MonoBehaviour {
 		goalText.text = "GOAL: "+ LM.getInstructions ();
 
 		feedback.text = "";
-        Debug.Log(totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]);
-        
+
+        Services.EventManager.Register<KeyPressed>(OnKeyPressed);
+    }
+
+    private void OnDestroy()
+    {
+        Services.EventManager.Unregister<KeyPressed>(OnKeyPressed);
+    }
+
+    private void OnKeyPressed(KeyPressed key)
+    {
+        NextDistrict(key.code);
     }
 
     public Vector2[] Directions()
@@ -140,9 +150,7 @@ public class DistrictMap : MonoBehaviour {
 		totalPopulation[(int)PoliticalParty.TRIANGLE] += population[(int)PoliticalParty.TRIANGLE];
 
 		stats.text = "Circle population is: " + totalPopulation [(int)PoliticalParty.CIRCLE];
-		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];
-
-        
+		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];   
     }
 
     public void SetMaxPopulationDifference()
@@ -188,7 +196,6 @@ public class DistrictMap : MonoBehaviour {
         return population;
     }
 
-
     public int GetDistrictTrianglePopulation(int districtNumber)
     {
         int population = 0;
@@ -199,18 +206,6 @@ public class DistrictMap : MonoBehaviour {
         }
         return population;
     }
-
-    /*
-     *      1: Gather all nodes of a district
-     *      2: For the first node check all adjacent spaces
-     *      3: Add adjacent spaces with the same county to spacesToBeChecked list
-     *      4: If adjacent space has the same district add it to clump
-     *      5: Add space to list of checkedSpaces
-     *      5: Search the next space in spacesToBeChecked
-     *      6: Remove item 
-     *      6: End if node space
-     */
-    
 
     public bool AllDistrictsContinuityCheck()
     {
@@ -255,7 +250,6 @@ public class DistrictMap : MonoBehaviour {
         List<County> countiesToBeChecked = new List<County>();
 
         //  Foreach county in counties to be checked look at its neighbors
-
         Vector2[] directions = Directions();
 
         for (int i = 0; i < directions.Length; i++)
@@ -284,25 +278,9 @@ public class DistrictMap : MonoBehaviour {
 
     private bool IsContinuous(County gridSpace)
     {
-        //  If the district is empty, it is continuous
-        //  To stop islanding run a continuity check for all districts before setting one
-        
-        //  Check if all districts are empty
-        //  Check if current district is empty
-        //  Check if adjacent spots are continuous
         if (IsDistrictEmpty(currentDistrict)) return true;
         else
         {
-            /*
-            for (int i  = 0; i < numDistricts; i++)
-            {
-                if (confirmContinuity(i))
-                    return true;
-                else
-                    return false;
-            }
-            */
-
             //  Get the N, S, E, W spaces of the map
             float north     = gridSpace.gridPos.y + 1;
             float south     = gridSpace.gridPos.y - 1;
@@ -353,8 +331,7 @@ public class DistrictMap : MonoBehaviour {
 
     // Update is called once per frame
     void Update ()
-    {
-        
+    {   
 		//  Left click
 		if (Input.GetMouseButtonDown (0)) isSelecting = true;
         //  Right click
@@ -445,6 +422,7 @@ public class DistrictMap : MonoBehaviour {
         }
 	}
 
+
     public void UpdatePopulations()
     {
         //this is for UI display
@@ -507,6 +485,25 @@ public class DistrictMap : MonoBehaviour {
 
 		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
 	}
+
+    void NextDistrict(KeyCode kcode)
+    {
+        if (!kcode.ToString().Contains("Alpha")) return;
+
+        int code = int.Parse(kcode.ToString().Replace("Alpha", ""));
+        if (code == 0) return;
+
+        indicators[currentDistrict].SetActive(false);
+        for (int i = 0; i < numDistricts + 1; i++)
+        {
+            if (i == code)
+            {
+                currentDistrict = i - 1; 
+            }
+        }
+
+        indicators[currentDistrict].SetActive(true);
+    }
 
 	void NextDistrict(bool isUp)
     {

@@ -17,25 +17,29 @@ using System;
 /*			private:																	*/
 /*																						*/
 /*--------------------------------------------------------------------------------------*/
-public class GameEventsManager 
+public class GameEventsManager
 {
 
+    public delegate void GameEventDelegate<T>(T e) where T : GameEvent; //  Delegate for GameEvents
+    private delegate void GameEventDelegate(GameEvent e);
+
     static private GameEventsManager instance;          //  Instance of GameEventsManager
-    static public GameEventsManager Instance 
-    { 
-        get 
+    static public GameEventsManager Instance
+    {
+        get
         {
-            if (instance == null) 
+            if (instance == null)
             {
                 instance = new GameEventsManager();
             }
             return instance;
         }
     }
-    
+
     //  Dictionary of all GameEvents
-    private Dictionary<Type, GameEvent.Handler> registeredHandlers = new Dictionary<Type, GameEvent.Handler>();
-    
+    private Dictionary<Type, GameEventDelegate> delegates = new Dictionary<Type, GameEventDelegate>();
+    private Dictionary<System.Delegate, GameEventDelegate> delegateLookup = new Dictionary<System.Delegate, GameEventDelegate>();
+
     /*--------------------------------------------------------------------------------------*/
     /*																						*/
     /*	Register<T>: Registers script for a GameEvent          								*/
@@ -44,19 +48,27 @@ public class GameEventsManager
     /*				GameEvent.Handler handler - Handler for the GameEvent       			*/
     /*																						*/
     /*--------------------------------------------------------------------------------------*/
-    public void Register<T>(GameEvent.Handler handler) where T : GameEvent 
+    public void Register<T>(GameEventDelegate<T> del) where T : GameEvent
     {
-        Type type = typeof(T);
-        if (registeredHandlers.ContainsKey(type))
+        if (delegateLookup.ContainsKey(del))
         {
-            registeredHandlers[type] += handler;
-        } 
-        else 
+            return;
+        }
+
+        GameEventDelegate internalDelegate = (e) => del((T)e);
+        delegateLookup[del] = internalDelegate;
+
+        GameEventDelegate tempDel;
+        if (delegates.TryGetValue(typeof(T), out tempDel))
         {
-            registeredHandlers[type] = handler;
+            delegates[typeof(T)] = tempDel + internalDelegate;
+        }
+        else
+        {
+            delegates[typeof(T)] = internalDelegate;
         }
     }
-    
+
     /*--------------------------------------------------------------------------------------*/
     /*																						*/
     /*	Unregister<T>: Unregisters script for a GameEvent          							*/
@@ -65,24 +77,28 @@ public class GameEventsManager
     /*				GameEvent.Handler handler - Handler for the GameEvent       			*/
     /*																						*/
     /*--------------------------------------------------------------------------------------*/
-    public void Unregister<T>(GameEvent.Handler handler) where T : GameEvent 
+    public void Unregister<T>(GameEventDelegate<T> del) where T : GameEvent
     {
-        Type type = typeof(T);
-        GameEvent.Handler handlers;
-        if (registeredHandlers.TryGetValue(type, out handlers)) 
+        GameEventDelegate internalDelegate;
+        if (delegateLookup.TryGetValue(del, out internalDelegate))
         {
-            handlers -= handler;
-            if (handlers == null) 
+            GameEventDelegate tempDel;
+            if (delegates.TryGetValue(typeof(T), out tempDel))
             {
-                registeredHandlers.Remove(type);
-            } 
-            else 
-            {
-                registeredHandlers[type] = handlers;
+                tempDel -= internalDelegate;
+                if (tempDel == null)
+                {
+                    delegates.Remove(typeof(T));
+                }
+                else
+                {
+                    delegates[typeof(T)] = tempDel;
+                }
             }
+            delegateLookup.Remove(del);
         }
     }
-    
+
     /*--------------------------------------------------------------------------------------*/
     /*																						*/
     /*	Fire: Fires the event          								                        */
@@ -90,14 +106,12 @@ public class GameEventsManager
     /*				GameEvent e - The current GameEvent                          			*/
     /*																						*/
     /*--------------------------------------------------------------------------------------*/
-    public void Fire(GameEvent e) 
+    public void Fire(GameEvent e)
     {
-        Type type = e.GetType();
-        GameEvent.Handler handlers;
-        if (registeredHandlers.TryGetValue(type, out handlers)) 
+        GameEventDelegate del;
+        if (delegates.TryGetValue(e.GetType(), out del))
         {
-            handlers(e);
+            del.Invoke(e);
         }
     }
- }
-
+}

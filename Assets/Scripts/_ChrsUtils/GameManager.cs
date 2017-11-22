@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        Services.InputManager.Update();
+
 	    if(Input.GetKeyDown(restartPrototype))
         {
             RestartPrototype();

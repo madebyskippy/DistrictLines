@@ -25,4 +25,13 @@ public class ButtonPressed : GameEvent
     }
 }
 
+public class KeyPressed : GameEvent
+{
+    public KeyCode code;
+    public KeyPressed(KeyCode kcode)
+    {
+        code = kcode;
+    }
+}
+
 public class Reset : GameEvent { }
