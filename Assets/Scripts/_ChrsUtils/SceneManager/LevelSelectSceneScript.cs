@@ -16,12 +16,29 @@ public class LevelSelectSceneScript : Scene<TransitionData>
     [SerializeField] private Text feedback;
 	[SerializeField] private ScoreType scoreType;
 
+	//for UI
+	[SerializeField] private GameObject selectMapSquare;
+	[SerializeField] private GameObject selectScoreSquare;
+
     internal override void OnEnter(TransitionData data)
     {
-        selectedDimensions = NO_DIMENSION_SELECTED;
+//        selectedDimensions = NO_DIMENSION_SELECTED;
+		//start it out with some defaults
+		setDimensions ("5");
+		setLevel ("Square");
+		setScoreType (1);
+
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
     }
+
+	public void moveMapSelector(Button b){
+		selectMapSquare.transform.position = b.transform.position;
+	}
+
+	public void moveScoreSelector(Button b){
+		selectScoreSquare.transform.position = b.transform.position;
+	}
 
     public void setLevel(string lvl)
     {
