@@ -190,6 +190,31 @@ public class DistrictMap : MonoBehaviour {
         return GetDistrictTotalPopulation(districtNumber) < 1;
     }
 
+	public int GetDistrictCircleCounty(int districtNumber){
+		int population = 0;
+		foreach (County county in allCounties)
+		{
+			if (county.getDistrict () == districtNumber) {
+				if (county.getGroup () == 0) {
+					population += 1;
+				}
+			}
+		}
+		return population;
+	}
+	public int GetDistrictTriangleCounty(int districtNumber){
+		int population = 0;
+		foreach (County county in allCounties)
+		{
+			if (county.getDistrict () == districtNumber) {
+				if (county.getGroup () == 1) {
+					population += 1;
+				}
+			}
+		}
+		return population;
+	}
+
     public int GetDistrictTotalPopulation(int districtNumber)
     {
         //  Otherwise we add all the members of each party
@@ -465,8 +490,8 @@ public class DistrictMap : MonoBehaviour {
         //this is for UI display
         for (int i = 0; i < numDistricts; i++)
         {
-            int circlePopulation = GetDistrictCirclePopulation(i);
-            int trianglePopulation = GetDistrictTrianglePopulation(i);
+			int circlePopulation = GetDistrictCircleCounty(i);
+			int trianglePopulation = GetDistrictTriangleCounty(i);
             indicators[i].SetPopulationBar(circlePopulation, trianglePopulation);
             int population = GetDistrictTotalPopulation(i);
             indicators[i].SetTotalPopulationText(population);

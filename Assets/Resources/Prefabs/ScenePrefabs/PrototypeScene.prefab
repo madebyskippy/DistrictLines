@@ -766,9 +766,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Left-click (& drag) to select which blocks to include in the current district.
-
-    Scroll or right-click to switch districts.'
+  m_Text: Left-click (& drag) on the map to select which blocks to include in the
+    current district. Click district labels to switch districts.
 --- !u!114 &114901375278477924
 MonoBehaviour:
   m_ObjectHideFlags: 1
