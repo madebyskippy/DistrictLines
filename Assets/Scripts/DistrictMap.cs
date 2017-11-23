@@ -15,6 +15,8 @@ public class DistrictMap : MonoBehaviour {
 	[SerializeField] Color[] colors;
 
 	int numDistricts;
+    int mostPopulated;
+    int leastPopulated;
 
 	//starting out with a square map of a set size
 	//this is a serializefield so that we can make adjustments as we prototype.
@@ -31,9 +33,10 @@ public class DistrictMap : MonoBehaviour {
 	[SerializeField] Text instructions;
 	[SerializeField] Text goalText;
 	[SerializeField] Text stats;
+    [SerializeField] Text clearCurrentDistrictButton;
 
 	//list of all the game spaces
-	List<County> counties;
+	List<County> allCounties;
     County[,] gridCoordinates;
 
 	//keeps track of how many people for each group in each district.
@@ -61,6 +64,8 @@ public class DistrictMap : MonoBehaviour {
 		totalPopulation = new int[]{0,0};
 
 		indicators = new DistrictIndicator[numDistricts];
+        mostPopulated = 0;
+        leastPopulated = 0;
 		for (int i = 0; i < numDistricts; i++)
         {
 			districtMakeup[(int)PoliticalParty.CIRCLE] [i] = 0;
@@ -80,7 +85,7 @@ public class DistrictMap : MonoBehaviour {
         rows = (int)TransitionData.Instance.dimensions.x;
         cols = (int)TransitionData.Instance.dimensions.y;
 
-        counties = new List<County> ();
+        allCounties = new List<County> ();
         gridCoordinates = new County[rows, cols];
 
         indicators [0].SetActive (true);
@@ -88,8 +93,29 @@ public class DistrictMap : MonoBehaviour {
 		goalText.text = "GOAL: "+ LM.getInstructions ();
 
 		feedback.text = "";
-        Debug.Log(totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]);
-        
+        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
+        Services.EventManager.Register<KeyPressed>(OnKeyPressed);
+    }
+
+    private void OnDestroy()
+    {
+        Services.EventManager.Unregister<KeyPressed>(OnKeyPressed);
+    }
+
+    private void OnKeyPressed(KeyPressed key)
+    {
+        if(key.code == KeyCode.P)
+        {
+            ClearAll();
+        }
+
+        if(key.code == KeyCode.L)
+        {
+            ClearCurrentDistrict();
+        }
+
+        NextDistrict(key.code);
     }
 
     public Vector2[] Directions()
@@ -112,7 +138,7 @@ public class DistrictMap : MonoBehaviour {
 
     public void AddGridSpaceToMap(County county)
     {
-        counties.Add(county);
+        allCounties.Add(county);
     }
 
     public bool CoordIsWithinBounds(Vector2 coord)
@@ -123,7 +149,7 @@ public class DistrictMap : MonoBehaviour {
     public int CountiesInDirstrict(int district)
     {
         int numOfCounties = 0;
-        foreach(County county in counties)
+        foreach(County county in allCounties)
         {
             if (county.getDistrict() == district)
             {
@@ -141,8 +167,6 @@ public class DistrictMap : MonoBehaviour {
 
 		stats.text = "Circle population is: " + totalPopulation [(int)PoliticalParty.CIRCLE];
 		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];
-
-        
     }
 
     public void SetMaxPopulationDifference()
@@ -169,7 +193,7 @@ public class DistrictMap : MonoBehaviour {
         //  Otherwise we add all the members of each party
         //  in the district we are counting to its population
         int population = 0;
-        foreach (County county in counties)
+        foreach (County county in allCounties)
         {
             if (county.getDistrict() == districtNumber)
                 population += county.getTotalPopulation();
@@ -180,7 +204,7 @@ public class DistrictMap : MonoBehaviour {
     public int GetDistrictCirclePopulation(int districtNumber)
     {
         int population = 0;
-        foreach (County county in counties)
+        foreach (County county in allCounties)
         {
             if (county.getDistrict() == districtNumber)
                 population += county.getCirclePatyPopulation();
@@ -188,29 +212,16 @@ public class DistrictMap : MonoBehaviour {
         return population;
     }
 
-
     public int GetDistrictTrianglePopulation(int districtNumber)
     {
         int population = 0;
-        foreach (County county in counties)
+        foreach (County county in allCounties)
         {
             if (county.getDistrict() == districtNumber)
                 population += county.getTrianglePartyPopulation();
         }
         return population;
     }
-
-    /*
-     *      1: Gather all nodes of a district
-     *      2: For the first node check all adjacent spaces
-     *      3: Add adjacent spaces with the same county to spacesToBeChecked list
-     *      4: If adjacent space has the same district add it to clump
-     *      5: Add space to list of checkedSpaces
-     *      5: Search the next space in spacesToBeChecked
-     *      6: Remove item 
-     *      6: End if node space
-     */
-    
 
     public bool AllDistrictsContinuityCheck()
     {
@@ -221,7 +232,7 @@ public class DistrictMap : MonoBehaviour {
         }
 
         County[] firstInsance = new County[numDistricts];
-        foreach(County county in counties)
+        foreach(County county in allCounties)
         {
             for (int i = 0; i < firstInsance.Length; i++)
             {
@@ -255,7 +266,6 @@ public class DistrictMap : MonoBehaviour {
         List<County> countiesToBeChecked = new List<County>();
 
         //  Foreach county in counties to be checked look at its neighbors
-
         Vector2[] directions = Directions();
 
         for (int i = 0; i < directions.Length; i++)
@@ -284,25 +294,9 @@ public class DistrictMap : MonoBehaviour {
 
     private bool IsContinuous(County gridSpace)
     {
-        //  If the district is empty, it is continuous
-        //  To stop islanding run a continuity check for all districts before setting one
-        
-        //  Check if all districts are empty
-        //  Check if current district is empty
-        //  Check if adjacent spots are continuous
         if (IsDistrictEmpty(currentDistrict)) return true;
         else
         {
-            /*
-            for (int i  = 0; i < numDistricts; i++)
-            {
-                if (confirmContinuity(i))
-                    return true;
-                else
-                    return false;
-            }
-            */
-
             //  Get the N, S, E, W spaces of the map
             float north     = gridSpace.gridPos.y + 1;
             float south     = gridSpace.gridPos.y - 1;
@@ -336,25 +330,45 @@ public class DistrictMap : MonoBehaviour {
     {
         int lowestPopulation = int.MaxValue;
         int highestPopulation = int.MinValue;
-        for (int i = 0; i < colors.Length; i++)
+
+        for (int i = 0; i < numDistricts; i++)
         {
             int population = GetDistrictTotalPopulation(i);
             if(population < lowestPopulation)
             {
+                leastPopulated = i;
                 lowestPopulation = population;
             }
             if(highestPopulation < population)
             {
+                mostPopulated = i;
                 highestPopulation = population;
             }
         }
         return highestPopulation - lowestPopulation <= MAX_POPULATION_DIFFERENCE;
     }
 
+    void ValidatePopulationDistributionForUI()
+    {
+        if (!PopulationDistributionIsValid())
+        {
+            //  Makes most populated district number smaller and gray
+            indicators[mostPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(mostPopulated), Mathf.RoundToInt(indicators[mostPopulated].defaultPopFontSize * 0.80f), Color.gray);
+            //  Makes the least populated district number bigger and red
+            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.33f), Color.red);
+        }
+        else
+        {
+            for (int i = 0; i < numDistricts; i++)
+            {
+                indicators[i].SetTotalPopulationText(GetDistrictTotalPopulation(i));
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update ()
-    {
-        
+    {   
 		//  Left click
 		if (Input.GetMouseButtonDown (0)) isSelecting = true;
         //  Right click
@@ -368,7 +382,9 @@ public class DistrictMap : MonoBehaviour {
             }
         }
 
-		if (Input.GetAxis ("Mouse ScrollWheel") != 0)
+        ValidatePopulationDistributionForUI();
+
+        if (Input.GetAxis ("Mouse ScrollWheel") != 0)
         {
 			if (!haveScrolled)
             {
@@ -401,8 +417,6 @@ public class DistrictMap : MonoBehaviour {
                 //ok now set the district and increase the count
                 // check if continuos
 				int objectPreviousDistrict = objectHit.getDistrict();
-
-                Debug.Log("Prev district: " + objectPreviousDistrict);
 
                 if (IsContinuous(objectHit))
                 {
@@ -440,10 +454,9 @@ public class DistrictMap : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0))
         {
 			isSelecting = false;
-
-            //UpdatePopulations();
         }
 	}
+
 
     public void UpdatePopulations()
     {
@@ -458,21 +471,60 @@ public class DistrictMap : MonoBehaviour {
         }
     }
 
+    public void ClearAll()
+    {
+        for(int i = 0; i < numDistricts; i++)
+        {
+            districtMakeup[(int)PoliticalParty.CIRCLE][i] = 0;
+            districtMakeup[(int)PoliticalParty.TRIANGLE][i] = 0;
+        }
+
+        foreach(County county in allCounties)
+        {
+            if(county.getDistrict() != -1)
+            {
+                county.setColor(new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                county.setDistrict(-1);
+            }
+        }
+
+        UpdatePopulations();
+    }
+
+    public void ClearCurrentDistrict()
+    {
+
+        districtMakeup[(int)PoliticalParty.CIRCLE][currentDistrict] = 0;
+        districtMakeup[(int)PoliticalParty.TRIANGLE][currentDistrict] = 0;
+        
+
+        foreach (County county in allCounties)
+        {
+            if (county.getDistrict() == currentDistrict)
+            {
+                county.setColor(new Color(1.0f, 1.0f, 1.0f, 0.0f));
+                county.setDistrict(-1);
+            }
+        }
+
+        UpdatePopulations();
+    }
+
 	//finished redistricting
 	public void Submit()
     {
 		feedback.text = "";
 		bool allSpacesAssigned = true;
-		for (int i = 0; i < counties.Count; i++)
+		for (int i = 0; i < allCounties.Count; i++)
 		{
-			if (counties [i] != null) {
-				if (counties [i].getDistrict () == -1)
+			if (allCounties [i] != null) {
+				if (allCounties [i].getDistrict () == -1)
                 {
 					feedback.color = Color.red;
 					feedback.text = "Some people have not been assigned a district.";
 
                     Debug.Log ("Some people have not been assined a district");
-					Debug.Log (counties [i].gridPos.x + ", " + counties [i].gridPos.y);
+					Debug.Log (allCounties [i].gridPos.x + ", " + allCounties [i].gridPos.y);
 
                     allSpacesAssigned = false;
 					break;
@@ -508,6 +560,26 @@ public class DistrictMap : MonoBehaviour {
 		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
 	}
 
+    void NextDistrict(KeyCode kcode)
+    {
+        if (!kcode.ToString().Contains("Alpha")) return;
+
+        int code = int.Parse(kcode.ToString().Replace("Alpha", ""));
+        if (code == 0) return;
+
+        indicators[currentDistrict].SetActive(false);
+        for (int i = 0; i < numDistricts + 1; i++)
+        {
+            if (i == code)
+            {
+                currentDistrict = i - 1; 
+            }
+        }
+
+        indicators[currentDistrict].SetActive(true);
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
+    }
+
 	void NextDistrict(bool isUp)
     {
 		int direction = -1;
@@ -522,6 +594,7 @@ public class DistrictMap : MonoBehaviour {
 			currentDistrict += numDistricts;
 		}
 		indicators [currentDistrict].SetActive(true);
+        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
 	}
 
 	//sets up the grid of the map
@@ -551,7 +624,7 @@ public class DistrictMap : MonoBehaviour {
                 newCounty.setCirclePartyPopulation(newCountyCirclePopulation);
                 newCounty.setTrianglePartyPopulation((totalCountyPopulation - newCountyCirclePopulation));
 
-                counties.Add (newCounty);
+                allCounties.Add (newCounty);
 
                 gridCoordinates[i, j] = newCounty.GetComponent<County>();
 

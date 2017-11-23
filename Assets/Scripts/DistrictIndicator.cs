@@ -15,11 +15,16 @@ public class DistrictIndicator : MonoBehaviour
 
     [SerializeField] public int totalPopulation { get; private set; }
 
+
 	bool isActive;
 
+    public int defaultPopFontSize { get; private set; }
+    private Color defaultColor;
 	// Use this for initialization
 	void Start ()
     {
+        defaultPopFontSize = poptext.fontSize;
+        defaultColor = poptext.color;
 		groupBars [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
 		groupBars [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
 		isActive = false;
@@ -72,8 +77,15 @@ public class DistrictIndicator : MonoBehaviour
 		}
 	}
 
-	public void SetTotalPopulationText(int p)
+    public void SetTotalPopulationText(int population)
     {
-		poptext.text = p.ToString ();
+        SetTotalPopulationText(population, defaultPopFontSize, defaultColor);
+    }
+
+    public void SetTotalPopulationText(int population, int fontSize, Color color)
+    {
+		poptext.text = population.ToString ();
+        poptext.fontSize = fontSize;
+        poptext.color = color;
 	}
 }

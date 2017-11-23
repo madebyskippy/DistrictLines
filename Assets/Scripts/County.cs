@@ -31,7 +31,8 @@ public class County : MonoBehaviour {
 
 	void displayClumps(){
 		//ceiling the square root to get the cols/rows and then place them
-		int cols = (int)Mathf.Ceil(Mathf.Sqrt(partyCount [0] + partyCount [1]));
+		int totalInCounty = partyCount [0] + partyCount [1];
+		int cols = (int)Mathf.Ceil(Mathf.Sqrt(totalInCounty));
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (i * cols + j < partyCount [0] + partyCount [1]) {
@@ -44,14 +45,28 @@ public class County : MonoBehaviour {
 					clump.transform.localRotation = Quaternion.Euler (90f, 0f, 0f);
 					if (i * cols + j >= partyCount [0]) {
 						sr.sprite = populationClump [1];
-						clump.transform.localScale = Vector3.one * 0.23f;
+						clump.transform.localScale = Vector3.one * 0.3f;
 					} else {
 						sr.sprite = populationClump [0];
-						clump.transform.localScale = Vector3.one * 0.18f;
+						clump.transform.localScale = Vector3.one * 0.235f;
 					}
 
 					//center & grid it in the area
-					clump.transform.localPosition = new Vector3 (-0.125f * (cols - 1f) + i * 0.25f, 0f, -0.125f * (cols - 1f) + j * 0.25f);
+					if (totalInCounty == 1) {
+						clump.transform.localPosition = Vector3.zero;
+					} else if (totalInCounty == 2) {
+						clump.transform.localPosition = new Vector3 (-0.175f + j*0.35f, 0f, 0f);
+					} else if (totalInCounty == 3) {
+						if (i * cols + j == 0) {
+							//the first one
+							clump.transform.localPosition = new Vector3 (0f, 0f, 0.175f);
+						} else {
+							clump.transform.localPosition = new Vector3 (-0.175f + j * 0.35f, 0f, -0.175f);
+						}
+					} else {
+						//shouldn't happen but it's here just in case
+						clump.transform.localPosition = new Vector3 (-0.175f * (cols - 1f) + i * 0.35f, 0f, -0.175f * (cols - 1f) + j * 0.35f);
+					}
 
 				} else {
 					break;
