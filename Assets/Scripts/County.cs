@@ -48,7 +48,7 @@ public class County : MonoBehaviour {
 						clump.transform.localScale = Vector3.one * 0.3f;
 					} else {
 						sr.sprite = populationClump [0];
-						clump.transform.localScale = Vector3.one * 0.235f;
+						clump.transform.localScale = Vector3.one * 0.21f;
 					}
 
 					//center & grid it in the area

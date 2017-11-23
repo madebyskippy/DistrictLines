@@ -77,6 +77,8 @@ public class DistrictMap : MonoBehaviour {
 			indicator.transform.SetParent (UICanvas.transform,false);
 			indicator.GetComponent<DistrictIndicator>().SetLabel(districtColors[i], (i + 1).ToString());
 			indicators[i] = indicator.GetComponent<DistrictIndicator>();
+			indicators [i].setDistrictMap(this);
+			indicators [i].setDistructNumber(i+1);
 		}
 
 		float height = indicators [0].GetComponent<RectTransform> ().rect.height;
@@ -558,6 +560,10 @@ public class DistrictMap : MonoBehaviour {
 		LM.setTotalPopulation (totalPopulation);
 
 		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
+	}
+
+	public void NextDistrict(int d){
+		NextDistrict (KeyCode.Alpha0 + d);
 	}
 
     void NextDistrict(KeyCode kcode)

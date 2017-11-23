@@ -15,6 +15,9 @@ public class DistrictIndicator : MonoBehaviour
 
     [SerializeField] public int totalPopulation { get; private set; }
 
+	private DistrictMap districtMap;
+
+	int districtNumber;
 
 	bool isActive;
 
@@ -28,6 +31,18 @@ public class DistrictIndicator : MonoBehaviour
 		groupBars [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
 		groupBars [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
 		isActive = false;
+	}
+
+	public void setDistrictMap(DistrictMap dm){
+		districtMap = dm;
+	}
+
+	public void setDistructNumber(int i){
+		districtNumber = i;
+	}
+
+	public void buttonClicked(){
+		districtMap.NextDistrict (districtNumber);
 	}
 
 	public void SetLabel(Color c, string l)
