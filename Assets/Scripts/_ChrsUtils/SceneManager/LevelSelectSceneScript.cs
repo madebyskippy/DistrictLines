@@ -23,9 +23,10 @@ public class LevelSelectSceneScript : Scene<TransitionData>
     internal override void OnEnter(TransitionData data)
     {
 //        selectedDimensions = NO_DIMENSION_SELECTED;
+
 		//start it out with some defaults
-		setDimensions ("5");
-		setLevel ("Square");
+		setDimensions ("8");
+		setLevel ("Rectangle");
 		setScoreType (1);
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();

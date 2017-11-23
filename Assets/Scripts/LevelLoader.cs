@@ -22,11 +22,23 @@ public class LevelLoader : MonoBehaviour
         districtMap = map;
     }
 
+	private void adjustCamera(Vector2 lvlDimension){
+		//it's camera size = 11 for 16x16 map
+		Camera.main.orthographicSize = (int)(10 * (float)((float)lvlDimension.x/(float)16));
+
+		//it's camera y position = 24 for 16x16 map
+		//camera y position = 17 for 8x8 map
+		//the y = mx + b is y = (7/8)x + 10
+		Vector3 oldPos = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (oldPos.x, (float)(7f/8f)*lvlDimension.x + 10, oldPos.z);
+	}
+
     public void loadLevel(string lvl, Vector2 lvlDimension)
     {
+		adjustCamera (lvlDimension);
         Assert.IsNotNull(districtMap, "This district map has not been set for the Level Loader");
 
-        textureMap = Resources.Load<Texture2D>("Levels/"+ 16 + "x" + 16
+		textureMap = Resources.Load<Texture2D>("Levels/"+ lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
                                         + "_" + lvl);
 
         if (lvl == "MAPTEST")
