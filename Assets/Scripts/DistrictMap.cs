@@ -68,14 +68,14 @@ public class DistrictMap : MonoBehaviour {
 
             GameObject indicator = Instantiate (districtIndicatorPrefab);
 
-            indicator.transform.position = new Vector3 (50f, 50f + (75f * (numDistricts - 1)) - 75f * i, 0f);
+            indicator.transform.position = new Vector3 (50f, 150f + (75f * (numDistricts - 1)) - 75f * i, 0f);
 			indicator.transform.SetParent (UICanvas.transform,false);
 			indicator.GetComponent<DistrictIndicator>().SetLabel(districtColors[i], (i + 1).ToString());
 			indicators[i] = indicator.GetComponent<DistrictIndicator>();
 		}
 
 		float height = indicators [0].GetComponent<RectTransform> ().rect.height;
-		height *= 0.75f * UICanvas.GetComponent<Canvas> ().scaleFactor;
+		height *= 0.9f * UICanvas.GetComponent<Canvas> ().scaleFactor;
 		districtHeader.gameObject.transform.position = new Vector3 (indicators[0].transform.position.x,indicators[0].transform.position.y+height, 0f);
         rows = (int)TransitionData.Instance.dimensions.x;
         cols = (int)TransitionData.Instance.dimensions.y;

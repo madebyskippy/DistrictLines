@@ -9,7 +9,8 @@ public class DistrictIndicator : MonoBehaviour
 	[SerializeField] GameObject label;
 	[SerializeField] Text labeltext;
 	[SerializeField] Text poptext;
-	[SerializeField] GameObject[] groups;
+	[SerializeField] GameObject[] groupBars;
+	[SerializeField] GameObject[] groupLabels;
 	[SerializeField] Button labelButton;
 
     [SerializeField] public int totalPopulation { get; private set; }
@@ -19,8 +20,8 @@ public class DistrictIndicator : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-		groups [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
-		groups [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
+		groupBars [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
+		groupBars [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
 		isActive = false;
 	}
 
@@ -54,12 +55,20 @@ public class DistrictIndicator : MonoBehaviour
 
         if (total == 0)
         { 
-			groups [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
-			groups [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
+			groupBars [(int)PoliticalParty.CIRCLE].transform.localScale = Vector3.zero;
+			groupBars [(int)PoliticalParty.TRIANGLE].transform.localScale = Vector3.zero;
+			groupLabels [(int)PoliticalParty.CIRCLE].SetActive (false);
+			groupLabels [(int)PoliticalParty.TRIANGLE].SetActive (false);
 		} else {
-            
-            groups [(int)PoliticalParty.CIRCLE].transform.localScale = new Vector3 (ratio, 1f, 1f);
-			groups [(int)PoliticalParty.TRIANGLE].transform.localScale = new Vector3 (1f, 1f, 1f);
+			groupBars [(int)PoliticalParty.CIRCLE].transform.localScale = new Vector3 (ratio, 1f, 1f);
+			groupBars [(int)PoliticalParty.TRIANGLE].transform.localScale = new Vector3 (1f, 1f, 1f);
+			groupLabels [(int)PoliticalParty.CIRCLE].SetActive (true);
+			groupLabels [(int)PoliticalParty.TRIANGLE].SetActive (true);
+			if (ratio == 1) {
+				groupLabels [(int)PoliticalParty.TRIANGLE].SetActive (false);
+			} else if (ratio == 0) {
+				groupLabels [(int)PoliticalParty.CIRCLE].SetActive (false);
+			}
 		}
 	}
 
