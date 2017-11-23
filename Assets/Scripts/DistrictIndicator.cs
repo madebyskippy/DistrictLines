@@ -59,12 +59,10 @@ public class DistrictIndicator : MonoBehaviour
 		if (isActive) {
 			labelButton.transform.localScale = new Vector3(1.75f,1f,1f);
 			labeltext.color = Color.white;
-			labeltext.fontStyle = FontStyle.Bold;
 			labelButton.transform.GetChild (0).transform.localScale = new Vector3 (0.57f, 1f, 1f);
 		} else {
 			labelButton.transform.localScale = Vector3.one;
 			labeltext.color = Color.black;
-			labeltext.fontStyle = FontStyle.Normal;
 		}
 	}
 
