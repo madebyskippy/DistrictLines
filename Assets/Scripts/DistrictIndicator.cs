@@ -18,6 +18,7 @@ public class DistrictIndicator : MonoBehaviour
 	private DistrictMap districtMap;
 
 	int districtNumber;
+	Color districtColor;
 
 	bool isActive;
 
@@ -45,9 +46,14 @@ public class DistrictIndicator : MonoBehaviour
 		districtMap.NextDistrict (districtNumber);
 	}
 
+	public void clearClicked(){
+		districtMap.ClearDistrict (districtNumber-1);
+	}
+
 	public void SetLabel(Color c, string l)
     {
 		label.GetComponent<Image>().color = c;
+		districtColor = c;
 		labeltext.text = l;
 		labelButton.image.color = c;
 		labelButton.transform.GetChild (0).GetComponent<Text> ().text = l;
@@ -86,6 +92,17 @@ public class DistrictIndicator : MonoBehaviour
 				groupLabels [(int)PoliticalParty.TRIANGLE].SetActive (false);
 			} else if (ratio == 0) {
 				groupLabels [(int)PoliticalParty.CIRCLE].SetActive (false);
+			}
+
+			if (ratio > 0.5f) { //circle is majority
+				groupLabels [(int)PoliticalParty.CIRCLE].GetComponent<Image> ().color = districtColor;
+				groupLabels [(int)PoliticalParty.TRIANGLE].GetComponent<Image> ().color = Color.white;
+			} else if (ratio < 0.5f) { //triangle is majority
+				groupLabels [(int)PoliticalParty.CIRCLE].GetComponent<Image> ().color = Color.white;
+				groupLabels [(int)PoliticalParty.TRIANGLE].GetComponent<Image> ().color = districtColor;
+			} else {
+				groupLabels [(int)PoliticalParty.CIRCLE].GetComponent<Image> ().color = Color.white;
+				groupLabels [(int)PoliticalParty.TRIANGLE].GetComponent<Image> ().color = Color.white;
 			}
 		}
 	}

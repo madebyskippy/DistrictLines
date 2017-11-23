@@ -27,7 +27,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 		//start it out with some defaults
 		setDimensions ("8");
 		setLevel ("Rectangle");
-		setScoreType (1);
+		setScoreType (0);
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";

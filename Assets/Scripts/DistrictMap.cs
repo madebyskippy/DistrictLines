@@ -95,8 +95,8 @@ public class DistrictMap : MonoBehaviour {
 		goalText.text = "GOAL: "+ LM.getInstructions ();
 
 		feedback.text = "";
-        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
-        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
+//        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
+//        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
         Services.EventManager.Register<KeyPressed>(OnKeyPressed);
     }
 
@@ -537,6 +537,24 @@ public class DistrictMap : MonoBehaviour {
         UpdatePopulations();
     }
 
+	public void ClearDistrict(int d){
+		Debug.Log ("clear district " + d);
+		districtMakeup[(int)PoliticalParty.CIRCLE][d] = 0;
+		districtMakeup[(int)PoliticalParty.TRIANGLE][d] = 0;
+
+
+		foreach (County county in allCounties)
+		{
+			if (county.getDistrict() == d)
+			{
+				county.setColor(new Color(1.0f, 1.0f, 1.0f, 0.0f));
+				county.setDistrict(-1);
+			}
+		}
+
+		UpdatePopulations();
+	}
+
 	//finished redistricting
 	public void Submit()
     {
@@ -608,7 +626,7 @@ public class DistrictMap : MonoBehaviour {
         }
 
         indicators[currentDistrict].SetActive(true);
-        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
+//        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
     }
 
 	void NextDistrict(bool isUp)
@@ -625,7 +643,7 @@ public class DistrictMap : MonoBehaviour {
 			currentDistrict += numDistricts;
 		}
 		indicators [currentDistrict].SetActive(true);
-        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
+//        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
 	}
 
 	//sets up the grid of the map
