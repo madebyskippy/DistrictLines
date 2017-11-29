@@ -16,6 +16,7 @@ public class votingManager : MonoBehaviour {
 	[SerializeField] Image resultReaction;
 	[SerializeField] Text[] feedbackText;
 	[SerializeField] Text goalText;
+	[SerializeField] Text detailedFeedback;
 
 	levelManager LM;
 
@@ -71,6 +72,10 @@ public class votingManager : MonoBehaviour {
 	public void score(int i){
 		districtCount = getDistrictCount ();
 
+		float[] ratio = groupPercentages ();
+		feedbackText[0].text = "" + Mathf.Round(ratio[0]*100) + "% of the population\nreceived "+districtCount[0]+" districts.";
+		feedbackText[1].text = "" + Mathf.Round(ratio[1]*100) + "% of the population\nreceived "+districtCount[1]+" districts.";
+
 		switch (i) {
 		case 0:
 			isResultGood = isWellRepresented ();
@@ -124,17 +129,22 @@ public class votingManager : MonoBehaviour {
 		return new int[]{group1, group2};
 	}
 
-	bool isWellRepresented(){
+	float[] groupPercentages(){
+
 		float group1distribution = (float)totalPopulation [0] / (float)(totalPopulation [0] + totalPopulation [1]);
 		float group2distribution = (float)totalPopulation [1] / (float)(totalPopulation [0] + totalPopulation [1]);
+		return new float[]{ group1distribution, group2distribution };
+	}
+
+	bool isWellRepresented(){
+		float[] ratios = groupPercentages();
+		float group1distribution = ratios[0];
+		float group2distribution = ratios[1];
 		//round it to the closest % with the numdistricts
 		//this is how many districts they SHOULD get
 		int group1district = (int)Mathf.Floor(group1distribution * numDistricts);
         int group2district = numDistricts - group1district;
 
-
-        feedbackText[0].text = "" + Mathf.Round(group1distribution*100) + "% of the population\nreceived "+districtCount[0]+" representatives.";
-		feedbackText[1].text = "" + Mathf.Round(group2distribution*100) + "% of the population\nreceived "+districtCount[1]+" representatives.";
 
 		if (group1district == districtCount [0]) {
 			return true;
@@ -151,8 +161,12 @@ public class votingManager : MonoBehaviour {
 		if (totalPopulation [0] < totalPopulation [1]) {
 			pop_minority = 0;
 		}
-		feedbackText[0].text += "\nthe population minority was group " + pop_minority;
-		feedbackText[1].text += "\nand the district representative minority is group " + result_minority+".";
+
+		if (pop_minority == 0) {
+			detailedFeedback.text = "Circle should've won more districts than Triangle.";
+		} else {
+			detailedFeedback.text = "Triangle should've won more districts than Circle.";
+		}
 		return (result_minority != pop_minority);
 	}
 
@@ -164,6 +178,15 @@ public class votingManager : MonoBehaviour {
 		int result_majority = Mathf.Max (districtCount [0], districtCount [1]);
 
 //		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives,\nthey got " + result_majority + " representatives.";
+
+		if (totalPopulation [0] > totalPopulation [1]) {
+			detailedFeedback.text = "Circle should have gotten 3 districts.";
+		} else if (totalPopulation [0] < totalPopulation [1]) {
+			detailedFeedback.text = "Triangle should have gotten 3 districts.";
+		} else {
+			detailedFeedback.text = "The populations were equal! No majority.";
+		}
+
 		if (pop_majority >= numDistricts) {
 			return (result_majority == pop_majority);
 		}
