@@ -134,7 +134,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         {
 
 			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel((int)scoreType,0,3);
-            Services.Scenes.Swap<PrototypeSceneScript>();
+            Services.Scenes.PushScene<PrototypeSceneScript>();
         }
 
     }

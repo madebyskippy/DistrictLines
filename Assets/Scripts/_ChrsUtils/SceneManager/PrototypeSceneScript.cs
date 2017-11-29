@@ -29,8 +29,13 @@ public class PrototypeSceneScript : Scene<TransitionData>
     {
 
     }
+    public void ToLevelSelect()
+    {
+        Services.GameManager.PrepareToSaveScene();
+        Services.Scenes.PopScene();
+    }
 
-	public void ChangeScene(){
+    public void ChangeScene(){
 		Services.Scenes.PushScene<VotingSceneScript>();
 	}
 
