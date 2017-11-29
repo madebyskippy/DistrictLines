@@ -5,9 +5,16 @@ using UnityEngine.UI;
 using System;
 
 public class votingManager : MonoBehaviour {
+	
+	[SerializeField] GameObject districtDataPrefab;
+	[SerializeField] Sprite[] resultReactions;
+	[SerializeField] GameObject districtHeader;
+	[SerializeField] GameObject UICanvas;
 
+	[SerializeField] Text populationData;
 	[SerializeField] Text resultText;
-	[SerializeField] Text feedbackText;
+	[SerializeField] Image resultReaction;
+	[SerializeField] Text[] feedbackText;
 	[SerializeField] Text goalText;
 
 	levelManager LM;
@@ -20,6 +27,8 @@ public class votingManager : MonoBehaviour {
 
 	bool isResultGood;
 
+	Color[] districtColors;
+
 	void Start(){
 		isResultGood = false;
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
@@ -28,13 +37,39 @@ public class votingManager : MonoBehaviour {
 		numDistricts = LM.getNumDistricts ();
 
 		score (LM.getScoreType ());
+		districtColors = LM.getColors ();
+
+		populationData.text = totalPopulation [0] + "\n" + totalPopulation [1];
+		goalText.text = "GOAL: "+ LM.getInstructions ();
+
+		for (int i = 0; i < numDistricts; i++)
+		{
+
+			GameObject indicator = Instantiate (districtDataPrefab);
+
+			indicator.transform.position = new Vector3 (50f, 150f + (75f * (numDistricts - 1)) - 75f * i, 0f);
+			indicator.transform.SetParent (UICanvas.transform,false);
+			DistrictData indicatorData = indicator.GetComponent<DistrictData>();
+			indicatorData.setDistrict(districtColors[i],i+1);
+
+			//this is bad code i am sorry
+			if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] > districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+				indicatorData.setParty (0);
+			} else if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] < districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+				indicatorData.setParty (1);
+			} else {
+				indicatorData.setParty (2);
+			}
+
+			indicatorData.setPopulation (districtMakeup [0][i] + districtMakeup [1][i]);
+		}
+
+		//hardcoded--again bad programming sorry
+		districtHeader.gameObject.transform.position = new Vector3 (50f,150+75f*(numDistricts-1)+90f, 0f);
 	}
 
 	public void score(int i){
-		goalText.text = "Your goal was: "+LM.getInstructions ();
 		districtCount = getDistrictCount ();
-
-		feedbackText.text = "Circle had "+totalPopulation[0]+" people and Triangle had "+totalPopulation[1]+" people.\n";
 
 		switch (i) {
 		case 0:
@@ -49,7 +84,9 @@ public class votingManager : MonoBehaviour {
 		}
 
 		if (isResultGood) {
-			resultText.text = "good job!";
+			resultText.text = "Nice job reaching your goal!";
+			resultReaction.sprite = resultReactions [0];
+
             string levelText = TransitionData.Instance.lvl.ToUpper();
             if (levelText.Equals("SQUARE"))
             {
@@ -66,7 +103,8 @@ public class votingManager : MonoBehaviour {
             }
 
 		} else {
-			resultText.text = "oof, you didn't meet the goal.";
+			resultReaction.sprite = resultReactions [1];
+			resultText.text = "Hmm, maybe try again?";
 		}
 	}
 
@@ -95,8 +133,8 @@ public class votingManager : MonoBehaviour {
         int group2district = numDistricts - group1district;
 
 
-        feedbackText.text += "\nCircle had " + Mathf.Round(group1distribution*100) + "% of the population and got "+districtCount[0]+" representatives.";
-		feedbackText.text += "\nTriangle had " + Mathf.Round(group2distribution*100) + "% of the population and got "+districtCount[1]+" representatives.";
+        feedbackText[0].text = "" + Mathf.Round(group1distribution*100) + "% of the population\nreceived "+districtCount[0]+" representatives.";
+		feedbackText[1].text = "" + Mathf.Round(group2distribution*100) + "% of the population\nreceived "+districtCount[1]+" representatives.";
 
 		if (group1district == districtCount [0]) {
 			return true;
@@ -113,8 +151,8 @@ public class votingManager : MonoBehaviour {
 		if (totalPopulation [0] < totalPopulation [1]) {
 			pop_minority = 0;
 		}
-		feedbackText.text += "\nthe population minority was group " + pop_minority;
-		feedbackText.text += "\nand the district representative minority is group " + result_minority+".";
+		feedbackText[0].text += "\nthe population minority was group " + pop_minority;
+		feedbackText[1].text += "\nand the district representative minority is group " + result_minority+".";
 		return (result_minority != pop_minority);
 	}
 
@@ -125,7 +163,7 @@ public class votingManager : MonoBehaviour {
 
 		int result_majority = Mathf.Max (districtCount [0], districtCount [1]);
 
-		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives,\nthey got " + result_majority + " representatives.";
+//		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives,\nthey got " + result_majority + " representatives.";
 		if (pop_majority >= numDistricts) {
 			return (result_majority == pop_majority);
 		}

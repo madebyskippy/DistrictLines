@@ -27,7 +27,7 @@ public class DistrictMap : MonoBehaviour {
 	[Header("UI stuff")]
 	[SerializeField] GameObject UICanvas;
 	[SerializeField] GameObject districtIndicatorPrefab;
-	[SerializeField] Color[] districtColors;
+	Color[] districtColors;
 	[SerializeField] Text districtHeader;
 	[SerializeField] Text feedback;
 	[SerializeField] Text instructions;
@@ -58,6 +58,7 @@ public class DistrictMap : MonoBehaviour {
     {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
 		numDistricts = LM.getNumDistricts ();
+		districtColors = LM.getColors ();
 		
         //start keeping track of the districts.
 		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
@@ -169,6 +170,8 @@ public class DistrictMap : MonoBehaviour {
 
 		stats.text = "" + totalPopulation [(int)PoliticalParty.CIRCLE];
 		stats.text += "\n" + totalPopulation [(int)PoliticalParty.TRIANGLE];
+
+		LM.setTotalPopulation (totalPopulation);
     }
 
     public void SetMaxPopulationDifference()
@@ -591,7 +594,7 @@ public class DistrictMap : MonoBehaviour {
 					feedback.text += "\n";
 				}
 				feedback.color = Color.red;
-				feedback.text += "One district has too many people.";
+				feedback.text += "The population isn't distributed!";
 				Debug.Log("One district has too many people");
 			}
 		}

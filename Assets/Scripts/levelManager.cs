@@ -18,6 +18,9 @@ public class levelManager : MonoBehaviour {
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
 	int[][] districtMakeup;
 
+	//the colors that represent the two groups
+	[SerializeField] Color[] colors;
+
 	// Use this for initialization
 	void Start () {
 
@@ -26,6 +29,10 @@ public class levelManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public Color[] getColors(){
+		return colors;
 	}
 
 	//-----
@@ -54,13 +61,13 @@ public class levelManager : MonoBehaviour {
 		string instruc = "";
 		switch (scoreType) {
 		case 0:
-			instruc = "make sure the final districts represent the population well!";
+			instruc = "Represent the population accurately.";
 			break;
 		case 1:
-			instruc = "can you get the minority group to win?";
+			instruc = "Make sure the minority group gets more districts.";
 			break;
 		case 2:
-			instruc = "make sure the majority wins by a landslide.";
+			instruc = "Have the majority get more districts than it deserves.";
 			break;
 		}
 		return instruc;
