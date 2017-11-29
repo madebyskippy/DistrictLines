@@ -29,7 +29,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         //        selectedDimensions = NO_DIMENSION_SELECTED;
 
         //start it out with some defaults
-        HARD_MODE_GATE = 2;
+        HARD_MODE_GATE = 0;
         easyLevels = PopulateButtonArray("Easy");
         hardLevels = PopulateButtonArray("Hard");
 

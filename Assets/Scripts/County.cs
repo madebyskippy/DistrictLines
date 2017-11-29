@@ -15,6 +15,7 @@ public class County : MonoBehaviour {
 	[SerializeField] SpriteRenderer districtSprite;
 	[SerializeField] SpriteRenderer selectorSprite;
 	[SerializeField] Sprite[] populationClump;
+	[SerializeField] TextMesh populationCount;
 
 	// Use this for initialization
 	void Awake () {
@@ -27,6 +28,26 @@ public class County : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void displayParty(){
+		if (partyCount [0] > partyCount [1]) {
+			districtSprite.sprite = populationClump [0];
+			districtSprite.transform.localScale = Vector3.one * 0.65f;
+			Vector3 oldPos = populationCount.transform.position;
+			populationCount.transform.position = new Vector3 (oldPos.x, oldPos.y, oldPos.z + 0.02f);
+		} else {
+			districtSprite.sprite = populationClump [1];
+			districtSprite.transform.localScale = Vector3.one * 0.8f;
+			Vector3 oldPos = districtSprite.transform.position;
+			districtSprite.transform.position = new Vector3 (oldPos.x,oldPos.y,oldPos.z-0.065f);
+			oldPos = populationCount.transform.position;
+			populationCount.transform.position = new Vector3 (oldPos.x, oldPos.y, oldPos.z - 0.04f);
+		}
+	}
+
+	void displayPopulation(){
+		populationCount.text = (partyCount[0]+partyCount[1]).ToString();
 	}
 
 	void displayClumps(){
@@ -44,6 +65,7 @@ public class County : MonoBehaviour {
 					clump.transform.parent = transform;
 					clump.transform.localRotation = Quaternion.Euler (90f, 0f, 0f);
 					if (i * cols + j >= partyCount [0]) {
+//					if (partyCount[0]<partyCount[1]) {
 						sr.sprite = populationClump [1];
 						clump.transform.localScale = Vector3.one * 0.3f;
 					} else {
@@ -96,6 +118,8 @@ public class County : MonoBehaviour {
 		partyCount[0] = (int)groups.x;
 		partyCount[1] = (int)groups.y;
 		displayClumps ();
+//		displayParty();
+//		displayPopulation ();
 	}
 
     public void setGroups(int g1, int g2)
@@ -103,6 +127,8 @@ public class County : MonoBehaviour {
 		partyCount[0] = g1;
 		partyCount[1] = g2;
 		displayClumps();
+//		displayParty();
+//		displayPopulation ();
 	}
 
     public int getGroup()

@@ -24,13 +24,13 @@ public class LevelLoader : MonoBehaviour
         }
 
 		//it's camera size = 11 for 16x16 map
-		Camera.main.orthographicSize = (int)(10 * (float)((float)lvlDimension.x/(float)16));
+		Camera.main.orthographicSize = (int)(11 * (float)((float)lvlDimension.x/(float)16));
 
-		//it's camera y position = 24 for 16x16 map
-		//camera y position = 17 for 8x8 map
-		//the y = mx + b is y = (7/8)x + 10
+		//it's camera y position = 7 for 16x16 map
+		//camera y position = 3.5 for 8x8 map
+		//the y = mx + b is y = (3.5/8)x + 0
 		Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (oldPos.x, (float)(7f/8f)*lvlDimension.y + 10, oldPos.z);
+		Camera.main.transform.position = new Vector3 (oldPos.x, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
 	}
 
     public void loadLevel(string lvl, Vector2 lvlDimension)
