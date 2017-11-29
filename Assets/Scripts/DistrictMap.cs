@@ -167,8 +167,8 @@ public class DistrictMap : MonoBehaviour {
         totalPopulation[(int)PoliticalParty.CIRCLE] += population[(int)PoliticalParty.CIRCLE];
 		totalPopulation[(int)PoliticalParty.TRIANGLE] += population[(int)PoliticalParty.TRIANGLE];
 
-		stats.text = "Circle population is: " + totalPopulation [(int)PoliticalParty.CIRCLE];
-		stats.text += "\nTriangle population is: " + totalPopulation [(int)PoliticalParty.TRIANGLE];
+		stats.text = "" + totalPopulation [(int)PoliticalParty.CIRCLE];
+		stats.text += "\n" + totalPopulation [(int)PoliticalParty.TRIANGLE];
     }
 
     public void SetMaxPopulationDifference()
