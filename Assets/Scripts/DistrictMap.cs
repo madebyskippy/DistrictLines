@@ -604,6 +604,11 @@ public class DistrictMap : MonoBehaviour {
     {
 		LM.setDistrictMakeup (districtMakeup);
 		LM.setTotalPopulation (totalPopulation);
+		int[] dp = new int[numDistricts];
+		for (int i = 0; i < numDistricts; i++) {
+			dp [i] = GetDistrictTotalPopulation (i);
+		}
+		LM.setDistrictPopulations (dp);
 
 		transform.parent.GetComponent<PrototypeSceneScript> ().ChangeScene ();
 	}

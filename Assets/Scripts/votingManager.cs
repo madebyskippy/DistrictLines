@@ -29,6 +29,7 @@ public class votingManager : MonoBehaviour {
 	bool isResultGood;
 
 	Color[] districtColors;
+	int[] districtPopulation;
 
 	void Start(){
 		isResultGood = false;
@@ -36,6 +37,7 @@ public class votingManager : MonoBehaviour {
 		totalPopulation = LM.getTotalPopulation ();
 		districtMakeup = LM.getDistrictMakeup ();
 		numDistricts = LM.getNumDistricts ();
+		districtPopulation = LM.getDistrictPopulations ();
 
 		score (LM.getScoreType ());
 		districtColors = LM.getColors ();
@@ -62,7 +64,7 @@ public class votingManager : MonoBehaviour {
 				indicatorData.setParty (2);
 			}
 
-			indicatorData.setPopulation (districtMakeup [0][i] + districtMakeup [1][i]);
+			indicatorData.setPopulation (districtPopulation[i]);
 		}
 
 		//hardcoded--again bad programming sorry

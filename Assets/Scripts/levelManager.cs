@@ -18,6 +18,8 @@ public class levelManager : MonoBehaviour {
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
 	int[][] districtMakeup;
 
+	int[] districtPopulation;
+
 	//the colors that represent the two groups
 	[SerializeField] Color[] colors;
 
@@ -90,5 +92,13 @@ public class levelManager : MonoBehaviour {
 
 	public int[][] getDistrictMakeup(){
 		return districtMakeup;
+	}
+
+	public void setDistrictPopulations(int[] dp){
+		districtPopulation = dp;
+	}
+
+	public int[] getDistrictPopulations(){
+		return districtPopulation;
 	}
 }
