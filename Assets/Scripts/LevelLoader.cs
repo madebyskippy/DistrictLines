@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public enum Level
-{
-    TEXTURETEST, MAPTEST, CALIFORNIA_STATE, FLORIDA_STATE, OHIO_STATE, NEWYORK_NYC 
-}
-
 public class LevelLoader : MonoBehaviour
 {
     public const string LEVEL_PATH = "";
@@ -23,6 +18,11 @@ public class LevelLoader : MonoBehaviour
     }
 
 	private void adjustCamera(Vector2 lvlDimension){
+        if (lvlDimension.x < 8)
+        {
+            lvlDimension = new Vector2(8.0f, 3);
+        }
+
 		//it's camera size = 11 for 16x16 map
 		Camera.main.orthographicSize = (int)(10 * (float)((float)lvlDimension.x/(float)16));
 
@@ -30,7 +30,7 @@ public class LevelLoader : MonoBehaviour
 		//camera y position = 17 for 8x8 map
 		//the y = mx + b is y = (7/8)x + 10
 		Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (oldPos.x, (float)(7f/8f)*lvlDimension.x + 10, oldPos.z);
+		Camera.main.transform.position = new Vector3 (oldPos.x, (float)(7f/8f)*lvlDimension.y + 10, oldPos.z);
 	}
 
     public void loadLevel(string lvl, Vector2 lvlDimension)

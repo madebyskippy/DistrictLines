@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - levelManager
+  - Easy
+  - Hard
+  - Tutorial
   layers:
   - Default
   - TransparentFX

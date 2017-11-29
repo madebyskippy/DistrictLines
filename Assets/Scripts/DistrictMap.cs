@@ -435,12 +435,7 @@ public class DistrictMap : MonoBehaviour {
 				County objectHit = hit.transform.gameObject.GetComponent<County>();
 				//check if it was already a district or not
 				int prevDistrict = objectHit.getDistrict ();
-				if (prevDistrict != -1)
-                {
-					//it was previously a district, but now it's not gonna be that anymore
-					//so we lower the count
-					districtMakeup [objectHit.getGroup ()] [prevDistrict]--;
-				}
+				
                 //ok now set the district and increase the count
                 // check if continuos
 				int objectPreviousDistrict = objectHit.getDistrict();
@@ -451,7 +446,12 @@ public class DistrictMap : MonoBehaviour {
                     objectHit.setDistrict(currentDistrict);
                     if (AllDistrictsContinuityCheck())
                     {
-
+                        if (prevDistrict != -1)
+                        {
+                            //it was previously a district, but now it's not gonna be that anymore
+                            //so we lower the count
+                            districtMakeup[objectHit.getGroup()][prevDistrict]--;
+                        }
 
                         objectHit.setColor(districtColors[currentDistrict]);
                         districtMakeup[objectHit.getGroup()][currentDistrict]++;

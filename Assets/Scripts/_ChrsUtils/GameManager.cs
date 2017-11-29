@@ -1,11 +1,17 @@
 ﻿using UnityEngine.Assertions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System;
+
+public enum EasyLevels { RECTANGLE, CROSS, DONUT, L, CHECKER, CORNER}
 
 public class GameManager : MonoBehaviour
 {
 
     public bool savePreviousScene { get; private set; }
+    public bool finishedTutorial { get; private set; }
+    public Dictionary<EasyLevels, bool> completedEasyLevels;
 
     public KeyCode restartPrototype = KeyCode.R;
 
@@ -34,8 +40,20 @@ public class GameManager : MonoBehaviour
 
     public void Init()
     {
+        completedEasyLevels = new Dictionary<EasyLevels, bool>();
+
+        finishedTutorial = false;
+        PopulateDictionary();
         NumPlayers = 1;
         _mainCamera = Camera.main;
+    }
+
+    private void PopulateDictionary()
+    {
+        foreach(EasyLevels level in Enum.GetValues(typeof(EasyLevels)))
+        {
+            completedEasyLevels.Add(level, false);
+        }
     }
 
 	// Use this for initialization
@@ -53,6 +71,11 @@ public class GameManager : MonoBehaviour
     private void RestartPrototype()
     {
         SceneManager.LoadScene("prototype");
+    }
+
+    public void SetFinishedTutorial(bool isFinished)
+    {
+        finishedTutorial = isFinished;
     }
 
     public void PrepareToSaveScene()

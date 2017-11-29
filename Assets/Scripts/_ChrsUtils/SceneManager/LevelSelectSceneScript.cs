@@ -11,10 +11,14 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 
     [SerializeField] private KeyCode submit = KeyCode.Return;
 
+    [SerializeField] private int HARD_MODE_GATE;
     [SerializeField] private string selectedLevel = NO_LEVEL_SELECTED;
     [SerializeField] private Vector2 selectedDimensions;
     [SerializeField] private Text feedback;
 	[SerializeField] private ScoreType scoreType;
+
+    [SerializeField] private Button[] easyLevels;
+    [SerializeField] private Button[] hardLevels;
 
 	//for UI
 	[SerializeField] private GameObject selectMapSquare;
@@ -22,15 +26,66 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 
     internal override void OnEnter(TransitionData data)
     {
-//        selectedDimensions = NO_DIMENSION_SELECTED;
+        //        selectedDimensions = NO_DIMENSION_SELECTED;
 
-		//start it out with some defaults
-		setDimensions ("8");
-		setLevel ("Rectangle");
+        //start it out with some defaults
+        HARD_MODE_GATE = 2;
+        easyLevels = PopulateButtonArray("Easy");
+        hardLevels = PopulateButtonArray("Hard");
+
+        setDimensions ("5");
+		setLevel ("Square");
 		setScoreType (0);
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
+        if (!Services.GameManager.finishedTutorial)
+        {
+            ToggleLevelButtons(easyLevels, false);
+        }
+        else
+        {
+            ToggleLevelButtons(easyLevels, true);
+        }
+
+        int easyLevelsFinished = 0;
+        foreach(KeyValuePair<EasyLevels, bool> levels in Services.GameManager.completedEasyLevels)
+        {
+            if (levels.Value)
+            {
+                easyLevelsFinished++;
+            }
+        }
+
+        if (easyLevelsFinished < HARD_MODE_GATE)
+        {
+            ToggleLevelButtons(hardLevels, false);
+        }
+        else
+        {
+            ToggleLevelButtons(hardLevels, true);
+        }
+
+    }
+
+    private void ToggleLevelButtons(Button[] buttonArray, bool interactable)
+    {
+        for (int i = 0; i < buttonArray.Length; i++)
+        {
+            buttonArray[i].interactable = interactable;
+        }
+    }
+
+    private Button[] PopulateButtonArray(string tag)
+    {
+        GameObject[] buttonGameObjects = GameObject.FindGameObjectsWithTag(tag);
+        Button[] buttonType = new Button[buttonGameObjects.Length];
+        for (int i = 0; i < buttonGameObjects.Length; i++)
+        {
+            buttonType[i] = buttonGameObjects[i].GetComponent<Button>();
+        }
+
+        return buttonType;
     }
 
 	public void moveMapSelector(Button b){

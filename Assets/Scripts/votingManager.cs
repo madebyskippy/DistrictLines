@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class votingManager : MonoBehaviour {
 
@@ -13,9 +14,9 @@ public class votingManager : MonoBehaviour {
 
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
 	int[][] districtMakeup;
-	int numDistricts;
+    [SerializeField] int numDistricts;
 
-	int[] districtCount;
+	[SerializeField] int[] districtCount;
 
 	bool isResultGood;
 
@@ -33,7 +34,7 @@ public class votingManager : MonoBehaviour {
 		goalText.text = "Your goal was: "+LM.getInstructions ();
 		districtCount = getDistrictCount ();
 
-		feedbackText.text = "group 1 had "+totalPopulation[0]+" people and group 2 had "+totalPopulation[1]+" people.\n";
+		feedbackText.text = "Circle had "+totalPopulation[0]+" people and Triangle had "+totalPopulation[1]+" people.\n";
 
 		switch (i) {
 		case 0:
@@ -49,6 +50,24 @@ public class votingManager : MonoBehaviour {
 
 		if (isResultGood) {
 			resultText.text = "good job!";
+            string levelText = TransitionData.Instance.lvl.ToUpper();
+            Debug.Log(levelText);
+            if (levelText.Equals("SQUARE"))
+            {
+                Debug.Log("Yups!");
+                Services.GameManager.SetFinishedTutorial(true);
+            }
+
+            foreach(EasyLevels level in Enum.GetValues(typeof(EasyLevels)))
+            {
+                string levelString = level.ToString();
+                if (levelString.Equals(levelText))
+                {
+                    Services.GameManager.completedEasyLevels[level] = true;
+                    Debug.Log(Services.GameManager.completedEasyLevels[EasyLevels.RECTANGLE]);
+                }
+            }
+
 		} else {
 			resultText.text = "oof, you didn't meet the goal.";
 		}
@@ -59,9 +78,9 @@ public class votingManager : MonoBehaviour {
 		int group2=0;
 		int tie = 0;
 		for (int i = 0; i < numDistricts; i++) {
-			if (districtMakeup [0] [i] > districtMakeup [1] [i]) {
+            if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] > districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
 				group1++;
-			} else if (districtMakeup [0] [i] < districtMakeup [1] [i]) {
+			} else if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] < districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
 				group2++;
 			} else {
 				tie++;
@@ -76,10 +95,11 @@ public class votingManager : MonoBehaviour {
 		//round it to the closest % with the numdistricts
 		//this is how many districts they SHOULD get
 		int group1district = (int)Mathf.Floor(group1distribution * numDistricts);
-		int group2district = (int)Mathf.Floor(group2distribution * numDistricts);
+        int group2district = numDistricts - group1district;
 
-		feedbackText.text += "\ngroup 1 had " + Mathf.Round(group1distribution*100) + "% of the population and got "+districtCount[0]+" representatives.";
-		feedbackText.text += "\ngroup 2 had " + Mathf.Round(group2distribution*100) + "% of the population and got "+districtCount[1]+" representatives.";
+
+        feedbackText.text += "\nCircle had " + Mathf.Round(group1distribution*100) + "% of the population and got "+districtCount[0]+" representatives.";
+		feedbackText.text += "\nTriangle had " + Mathf.Round(group2distribution*100) + "% of the population and got "+districtCount[1]+" representatives.";
 
 		if (group1district == districtCount [0]) {
 			return true;
