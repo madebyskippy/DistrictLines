@@ -51,10 +51,8 @@ public class votingManager : MonoBehaviour {
 		if (isResultGood) {
 			resultText.text = "good job!";
             string levelText = TransitionData.Instance.lvl.ToUpper();
-            Debug.Log(levelText);
             if (levelText.Equals("SQUARE"))
             {
-                Debug.Log("Yups!");
                 Services.GameManager.SetFinishedTutorial(true);
             }
 
@@ -64,7 +62,6 @@ public class votingManager : MonoBehaviour {
                 if (levelString.Equals(levelText))
                 {
                     Services.GameManager.completedEasyLevels[level] = true;
-                    Debug.Log(Services.GameManager.completedEasyLevels[EasyLevels.RECTANGLE]);
                 }
             }
 
