@@ -382,7 +382,7 @@ public class DistrictMap : MonoBehaviour {
             //  Makes most populated district number smaller and gray
             indicators[mostPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(mostPopulated), Mathf.RoundToInt(indicators[mostPopulated].defaultPopFontSize * 0.80f), Color.gray);
             //  Makes the least populated district number bigger and red
-            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.33f), Color.red);
+            indicators[leastPopulated].SetTotalPopulationText(GetDistrictTotalPopulation(leastPopulated), Mathf.RoundToInt(indicators[leastPopulated].defaultPopFontSize * 1.66f), new Color (1.0f, 0.5f, 0.0f));
         }
         else
         {

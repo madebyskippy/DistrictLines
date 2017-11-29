@@ -17,7 +17,8 @@ public class VotingSceneScript : Scene<TransitionData>
     public void PlayAgain()
     {
         Services.GameManager.PrepareToSaveScene();
-        Services.Scenes.Swap<LevelSelectSceneScript>();
+        Services.Scenes.PopScene();
+        Services.Scenes.PopScene();
     }
 
     public void Back()
