@@ -10,13 +10,14 @@ public class levelManager : MonoBehaviour {
 	 * keeps track of what each level is
 	 * holds data so map phase and voting phase can share information
 	 */
-
+    
+    public string currentLevel { get; private set; }
 	int scoreType;
 	int map;
 	int numDistricts;
 
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
-	int[][] districtMakeup;
+	Vector2[] districtMakeup;
 
 	int[] districtPopulation;
 
@@ -40,7 +41,8 @@ public class levelManager : MonoBehaviour {
 	//-----
 	//-----for map phase
 	//-----
-	public void setLevel(int st, int m, int nd){
+	public void setLevel(string _levelName, int st, int m, int nd){
+        currentLevel = _levelName;
 		scoreType = st;
 		map = m;
 		numDistricts = nd;
@@ -82,7 +84,7 @@ public class levelManager : MonoBehaviour {
 		totalPopulation = tp;
 	}
 
-	public void setDistrictMakeup(int[][] dm){
+	public void setDistrictMakeup(Vector2[] dm){
 		districtMakeup = dm;
 	}
 
@@ -90,7 +92,7 @@ public class levelManager : MonoBehaviour {
 		return totalPopulation;
 	}
 
-	public int[][] getDistrictMakeup(){
+	public Vector2[] getDistrictMakeup(){
 		return districtMakeup;
 	}
 

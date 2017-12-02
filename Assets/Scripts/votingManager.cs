@@ -21,7 +21,7 @@ public class votingManager : MonoBehaviour {
 	levelManager LM;
 
 	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
-	int[][] districtMakeup;
+	Vector2[] districtMakeup;
     [SerializeField] int numDistricts;
 
 	[SerializeField] int[] districtCount;
@@ -56,9 +56,9 @@ public class votingManager : MonoBehaviour {
 			indicatorData.setDistrict(districtColors[i],i+1);
 
 			//this is bad code i am sorry
-			if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] > districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+			if (districtMakeup[i].x > districtMakeup[i].y) {
 				indicatorData.setParty (0);
-			} else if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] < districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+			} else if (districtMakeup[i].x < districtMakeup[i].y) {
 				indicatorData.setParty (1);
 			} else {
 				indicatorData.setParty (2);
@@ -120,9 +120,11 @@ public class votingManager : MonoBehaviour {
 		int group2=0;
 		int tie = 0;
 		for (int i = 0; i < numDistricts; i++) {
-            if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] > districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+            Debug.Log(districtMakeup[i]);
+            if (districtMakeup[i].x > districtMakeup[i].y) {
+                
 				group1++;
-			} else if (districtMakeup [(int)PoliticalParty.CIRCLE] [i] < districtMakeup [(int)PoliticalParty.TRIANGLE] [i]) {
+			} else if (districtMakeup[i].x < districtMakeup[i].y) {
 				group2++;
 			} else {
 				tie++;

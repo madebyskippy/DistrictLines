@@ -37,8 +37,7 @@ public class LevelLoader : MonoBehaviour
     {
 		adjustCamera (lvlDimension);
         Assert.IsNotNull(districtMap, "This district map has not been set for the Level Loader");
-
-		textureMap = Resources.Load<Texture2D>("Levels/"+ lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
+        textureMap = Resources.Load<Texture2D>("Levels/"+ lvlDimension.x.ToString() + "x" + lvlDimension.y.ToString()
                                         + "_" + lvl);
 
         if (lvl == "MAPTEST")

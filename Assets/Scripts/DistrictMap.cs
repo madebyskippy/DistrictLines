@@ -34,6 +34,7 @@ public class DistrictMap : MonoBehaviour {
 	[SerializeField] Text goalText;
 	[SerializeField] Text stats;
     [SerializeField] Text clearCurrentDistrictButton;
+    [SerializeField] TutorialUIManager tutorialPanel;
 
 	//list of all the game spaces
 	List<County> allCounties;
@@ -42,7 +43,7 @@ public class DistrictMap : MonoBehaviour {
 	//keeps track of how many people for each group in each district.
 	//e.g. districtMakeup[(int)PoliticalParty.Circle][0] is how many people are in group A in district 1.
 	//	   districtMakeup[(int)PoltiicalParty.Triangle][0] is how many people are in group B in district 1.
-	public int[][] districtMakeup;
+	public Vector2[] districtMakeup;
 	public int[] totalPopulation;
 	//for user input and UI
 	bool haveScrolled = false;
@@ -57,25 +58,29 @@ public class DistrictMap : MonoBehaviour {
 	public void Init ()
     {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
-		numDistricts = LM.getNumDistricts ();
+        tutorialPanel = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
+        numDistricts = LM.getNumDistricts ();
 		districtColors = LM.getColors ();
-		
-        //start keeping track of the districts.
-		districtMakeup = new int[][]{new int[numDistricts], new int[numDistricts]};
-		totalPopulation = new int[]{0,0};
 
+        if(!LM.currentLevel.Contains("Tutorial"))
+        {
+            tutorialPanel.gameObject.SetActive(false); 
+        }
+
+        //start keeping track of the districts.
+        districtMakeup = new Vector2[numDistricts];
+		totalPopulation = new int[]{0,0};
+        GameObject indicatorHolder = GameObject.Find("IndicatorHolder");
 		indicators = new DistrictIndicator[numDistricts];
         mostPopulated = 0;
         leastPopulated = 0;
 		for (int i = 0; i < numDistricts; i++)
         {
-			districtMakeup[(int)PoliticalParty.CIRCLE] [i] = 0;
-			districtMakeup[(int)PoliticalParty.TRIANGLE] [i] = 0;
+            districtMakeup[i] = Vector2.zero;
 
             GameObject indicator = Instantiate (districtIndicatorPrefab);
-
             indicator.transform.position = new Vector3 (50f, 150f + (75f * (numDistricts - 1)) - 75f * i, 0f);
-			indicator.transform.SetParent (UICanvas.transform,false);
+			indicator.transform.SetParent (indicatorHolder.transform, false);
 			indicator.GetComponent<DistrictIndicator>().SetLabel(districtColors[i], (i + 1).ToString());
 			indicators[i] = indicator.GetComponent<DistrictIndicator>();
 			indicators [i].setDistrictMap(this);
@@ -453,11 +458,14 @@ public class DistrictMap : MonoBehaviour {
                         {
                             //it was previously a district, but now it's not gonna be that anymore
                             //so we lower the count
-                            districtMakeup[objectHit.getGroup()][prevDistrict]--;
+                            districtMakeup[currentDistrict] = new Vector2(GetDistrictCirclePopulation(currentDistrict) - objectHit.getCirclePatyPopulation(),
+                                                                        GetDistrictTrianglePopulation(currentDistrict) - objectHit.getTrianglePartyPopulation());
                         }
 
                         objectHit.setColor(districtColors[currentDistrict]);
-                        districtMakeup[objectHit.getGroup()][currentDistrict]++;
+                        districtMakeup[currentDistrict] = new Vector2(districtMakeup[currentDistrict].x + objectHit.getCirclePatyPopulation(),
+                                                                        districtMakeup[currentDistrict].y + objectHit.getTrianglePartyPopulation());
+                        Debug.Log(districtMakeup[currentDistrict]);
                         UpdatePopulations();
                         feedback.text = "";
                     }
@@ -505,8 +513,7 @@ public class DistrictMap : MonoBehaviour {
     {
         for(int i = 0; i < numDistricts; i++)
         {
-            districtMakeup[(int)PoliticalParty.CIRCLE][i] = 0;
-            districtMakeup[(int)PoliticalParty.TRIANGLE][i] = 0;
+            districtMakeup[i] = Vector2.zero;
         }
 
         foreach(County county in allCounties)
@@ -524,8 +531,7 @@ public class DistrictMap : MonoBehaviour {
     public void ClearCurrentDistrict()
     {
 
-        districtMakeup[(int)PoliticalParty.CIRCLE][currentDistrict] = 0;
-        districtMakeup[(int)PoliticalParty.TRIANGLE][currentDistrict] = 0;
+        districtMakeup[currentDistrict] = Vector2.zero;
         
 
         foreach (County county in allCounties)
@@ -542,9 +548,7 @@ public class DistrictMap : MonoBehaviour {
 
 	public void ClearDistrict(int d){
 		Debug.Log ("clear district " + d);
-		districtMakeup[(int)PoliticalParty.CIRCLE][d] = 0;
-		districtMakeup[(int)PoliticalParty.TRIANGLE][d] = 0;
-
+        districtMakeup[d] = Vector2.zero;
 
 		foreach (County county in allCounties)
 		{

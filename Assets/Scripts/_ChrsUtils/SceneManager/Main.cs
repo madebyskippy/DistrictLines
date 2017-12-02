@@ -61,13 +61,18 @@ using UnityEngine.Assertions;
 #endregion
 public class Main : MonoBehaviour
 {
+    [SerializeField] private bool debug;
+
     private void Awake()
     {
         Assert.raiseExceptions = true;
 
         InitalizeServices();
 
-        Services.Scenes.PushScene<TitleSceneScript>();
+        if (!debug)
+        {
+            Services.Scenes.PushScene<TitleSceneScript>();
+        }
     }
 
     private void InitalizeServices()

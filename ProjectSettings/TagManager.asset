@@ -8,6 +8,7 @@ TagManager:
   - Easy
   - Hard
   - Tutorial
+  - HoverSpot
   layers:
   - Default
   - TransparentFX

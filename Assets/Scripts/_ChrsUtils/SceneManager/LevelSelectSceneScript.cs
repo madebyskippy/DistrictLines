@@ -34,7 +34,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         hardLevels = PopulateButtonArray("Hard");
 
         setDimensions ("5");
-		setLevel ("Square");
+		setLevel ("Tutorial1");
 		setScoreType (0);
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
@@ -133,7 +133,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         else
         {
 
-			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel((int)scoreType,0,3);
+			GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>().setLevel(selectedLevel,(int)scoreType,0,3);
             Services.Scenes.PushScene<PrototypeSceneScript>();
         }
 
