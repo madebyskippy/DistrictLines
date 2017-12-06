@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -21,11 +22,13 @@ public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("Show");
+//		GetComponent<Image> ().color = new Color (1f,0.9f,0.36f,0.5f);
         manager.ShowTutorialPanel(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
-    {
+	{
+//		GetComponent<Image> ().color = new Color (1f,0.9f,0.36f,0.0f);
         manager.ShowTutorialPanel(null);
     }
 }

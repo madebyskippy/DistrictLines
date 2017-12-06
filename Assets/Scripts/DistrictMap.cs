@@ -79,7 +79,7 @@ public class DistrictMap : MonoBehaviour {
             districtMakeup[i] = Vector2.zero;
 
             GameObject indicator = Instantiate (districtIndicatorPrefab);
-            indicator.transform.position = new Vector3 (50f, 150f + (75f * (numDistricts - 1)) - 75f * i, 0f);
+            indicator.transform.position = new Vector3 (50f, 200f + (75f * (numDistricts - 1)) - 75f * i, 0f);
 			indicator.transform.SetParent (indicatorHolder.transform, false);
 			indicator.GetComponent<DistrictIndicator>().SetLabel(districtColors[i], (i + 1).ToString());
 			indicators[i] = indicator.GetComponent<DistrictIndicator>();

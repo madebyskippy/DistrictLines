@@ -7,12 +7,15 @@ public class TutorialUIManager : MonoBehaviour
 {
     private Text tutorialText;
     private TutorialText currentHoverSpot;
-    private Image tutorialPanel;
+	private Image tutorialPanel;
+	private Image tutorialPanelShadow;
     private List<TutorialText> hoverSpots;
 	// Use this for initialization
 	void Start ()
     {
-        tutorialPanel = GetComponent<Image>();
+//		tutorialPanel = GetComponent<Image>();
+		tutorialPanel = transform.GetChild (1).GetComponent<Image> ();
+		tutorialPanelShadow = transform.GetChild (0).GetComponent<Image> ();
         tutorialText = GetComponentInChildren<Text>();
 
         GameObject[] hoverSpotsGameObjects = GameObject.FindGameObjectsWithTag("HoverSpot");
@@ -33,12 +36,14 @@ public class TutorialUIManager : MonoBehaviour
     {
         if (hoverSpot != null)
         {
-            tutorialPanel.color = new Color(0.38f, 0.38f, 0.38f, 1.0f);
+			tutorialPanel.enabled = true;
+			tutorialPanelShadow.enabled = true;
             SetTutorialText(hoverSpot.GetText());
         }
         else
         {
-            tutorialPanel.color = new Color(0.38f, 0.38f, 0.38f, 0.0f);
+			tutorialPanel.enabled = false;
+			tutorialPanelShadow.enabled = false;
             SetTutorialText("");
         }
     }
