@@ -95,7 +95,7 @@ public class votingManager : MonoBehaviour {
 			resultReaction.sprite = resultReactions [0];
 
             string levelText = TransitionData.Instance.lvl.ToUpper();
-            if (levelText.Equals("SQUARE"))
+            if (levelText.Equals("Tutorial1"))
             {
                 Services.GameManager.SetFinishedTutorial(true);
             }

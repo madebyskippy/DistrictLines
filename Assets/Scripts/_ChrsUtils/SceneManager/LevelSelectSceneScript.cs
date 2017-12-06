@@ -29,7 +29,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         //        selectedDimensions = NO_DIMENSION_SELECTED;
 
         //start it out with some defaults
-        HARD_MODE_GATE = 0;
+        HARD_MODE_GATE = 3;
         easyLevels = PopulateButtonArray("Easy");
         hardLevels = PopulateButtonArray("Hard");
 
@@ -39,7 +39,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
-        if (!Services.GameManager.finishedTutorial)
+		if (false)//!Services.GameManager.finishedTutorial)
         {
             ToggleLevelButtons(easyLevels, false);
         }

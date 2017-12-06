@@ -10,6 +10,9 @@ public class TutorialUIManager : MonoBehaviour
 	private Image tutorialPanel;
 	private Image tutorialPanelShadow;
     private List<TutorialText> hoverSpots;
+
+	TutorialText currentTutorial;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -36,31 +39,29 @@ public class TutorialUIManager : MonoBehaviour
     {
         if (hoverSpot != null)
         {
-			tutorialPanel.enabled = true;
-			tutorialPanelShadow.enabled = true;
-            SetTutorialText(hoverSpot.GetText());
+			if (currentTutorial == null) {
+				transform.localScale = Vector3.one;
+				SetTutorialText (hoverSpot.GetText ());
+				currentTutorial = hoverSpot;
+				currentTutorial.setHasShown (true);
+				currentTutorial.openTutorial();
+			}
         }
         else
         {
-			tutorialPanel.enabled = false;
-			tutorialPanelShadow.enabled = false;
-            SetTutorialText("");
+			transform.localScale = Vector3.zero;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        int layerMask = 1 << 5;
-        Ray ray;
-        RaycastHit hit;
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-        {
-            Debug.Log("Hit");
-            currentHoverSpot = hit.transform.gameObject.GetComponent<TutorialText>();
-            ShowTutorialPanel(currentHoverSpot);
-        }
-
     }
+
+	public void CloseBox(){
+		if (currentTutorial != null) {
+			currentTutorial.closeTutorial ();
+			currentTutorial = null;
+		}
+	}
 }

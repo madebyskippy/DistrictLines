@@ -10,9 +10,23 @@ public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	GameObject display;
     [SerializeField] private string tutorialText;
 
+	bool isActive;
+
+	bool hasShown;
+
     private void Start()
     {
-        manager = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
+		hasShown = false;
+		manager = null;
+		isActive = false;
+		try{
+			manager = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
+		}catch(System.Exception ex){
+			//do nothing
+		}
+		if (manager != null) {
+			isActive = true;
+		}
 		display = transform.GetChild (0).gameObject;
 		display.SetActive(false);
     }
@@ -24,16 +38,30 @@ public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Show");
-//		GetComponent<Image> ().color = new Color (1f,0.9f,0.36f,0.5f);
-		display.SetActive(true);
-        manager.ShowTutorialPanel(this);
+		if (isActive) {
+			if (!hasShown) {
+				Debug.Log ("Show");
+				manager.ShowTutorialPanel (this);
+			}
+		}
     }
 
     public void OnPointerExit(PointerEventData eventData)
 	{
-		//		GetComponent<Image> ().color = new Color (1f,0.9f,0.36f,0.0f);
-		display.SetActive(false);
-        manager.ShowTutorialPanel(null);
+		if (isActive) {
+		}
     }
+
+	public void openTutorial(){
+		display.SetActive (true);
+	}
+
+	public void setHasShown(bool hs){
+		hasShown = hs;
+	}
+
+	public void closeTutorial(){
+		display.SetActive (false);
+		manager.ShowTutorialPanel (null);
+	}
 }
