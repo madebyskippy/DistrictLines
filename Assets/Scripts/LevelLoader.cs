@@ -22,6 +22,10 @@ public class LevelLoader : MonoBehaviour
         {
             lvlDimension = new Vector2(8.0f, 3);
         }
+        else if(lvlDimension.x == 8)
+        {
+            lvlDimension = new Vector2(10.0f, 8);
+        }
 
 		//it's camera size = 11 for 16x16 map
 		Camera.main.orthographicSize = (int)(11 * (float)((float)lvlDimension.x/(float)16));

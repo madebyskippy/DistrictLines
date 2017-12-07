@@ -39,7 +39,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
-		if (false)//!Services.GameManager.finishedTutorial)
+		if (!Services.GameManager.finishedTutorial)
         {
             ToggleLevelButtons(easyLevels, false);
         }
