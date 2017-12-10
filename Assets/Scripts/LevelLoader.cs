@@ -25,7 +25,10 @@ public class LevelLoader : MonoBehaviour
 
         //it's camera x position = 0 for 16x16
         //camera x position = -2.5 for 3x3 map
-        //the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
+		//the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
+
+		Vector3 oldPos = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
 
 
         if (lvlDimension.x < 8)
@@ -40,8 +43,6 @@ public class LevelLoader : MonoBehaviour
         {
             lvlDimension = new Vector2(19.0f, 16);
         }
-        Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
 
 
        

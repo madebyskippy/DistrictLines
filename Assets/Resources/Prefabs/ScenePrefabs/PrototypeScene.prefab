@@ -2542,8 +2542,10 @@ MonoBehaviour:
   stats: {fileID: 114673733252037342}
   clearCurrentDistrictButton: {fileID: 0}
   tutorialPanel: {fileID: 0}
+  allCounties: []
   districtMakeup: []
   totalPopulation: 
+  indicators: []
 --- !u!114 &114870587881541320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3604,7 +3606,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1479867488986356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -150, y: 150, z: 0}
+  m_LocalPosition: {x: -125, y: 125, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224757724373008018}
@@ -3696,7 +3698,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1019852485288402}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 316, y: -28, z: 0}
+  m_LocalPosition: {x: 265, y: -25, z: 0}
   m_LocalScale: {x: 1.0000118, y: 1.0000118, z: 1.0000118}
   m_Children:
   - {fileID: 224486328543109090}
@@ -3705,8 +3707,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 316, y: -28}
-  m_SizeDelta: {x: 300, y: 300}
+  m_AnchoredPosition: {x: 265, y: -25}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224570794600630466
 RectTransform:
