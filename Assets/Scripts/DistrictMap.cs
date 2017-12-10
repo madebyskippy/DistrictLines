@@ -49,7 +49,7 @@ public class DistrictMap : MonoBehaviour {
 	bool haveScrolled = false;
 	bool isSelecting = false; //whether or not the mouse is down and you're selecting
 	int currentDistrict = 0; //the district that you're selecting for
-	DistrictIndicator[] indicators;
+	[SerializeField] DistrictIndicator[] indicators;
 
 	//for interfacing with the other 'scenes' like the voting phase
 	levelManager LM;
@@ -81,6 +81,7 @@ public class DistrictMap : MonoBehaviour {
             GameObject indicator = Instantiate (districtIndicatorPrefab);
             indicator.transform.position = new Vector3 (50f, 225f + (75f * (numDistricts - 1)) - 75f * i, 0f);
 			indicator.transform.SetParent (indicatorHolder.transform, false);
+            indicator.name = "Indicator " + (i + 1);
 			indicator.GetComponent<DistrictIndicator>().SetLabel(districtColors[i], (i + 1).ToString());
 			indicators[i] = indicator.GetComponent<DistrictIndicator>();
 			indicators [i].setDistrictMap(this);
@@ -104,6 +105,21 @@ public class DistrictMap : MonoBehaviour {
 //        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
 //        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
         Services.EventManager.Register<KeyPressed>(OnKeyPressed);
+    }
+
+    private void SetIndicators()
+    {
+        Debug.Log("HoHoHo");
+        for(int i = 0; i < numDistricts; i++)
+        {
+            indicators[i] = GameObject.Find("Indicator " + (i + 1)).GetComponent<DistrictIndicator>();
+        }
+        Services.EventManager.Register<KeyPressed>(OnKeyPressed);
+    }
+
+    private void OnDisable()
+    {
+        Services.EventManager.Unregister<KeyPressed>(OnKeyPressed);
     }
 
     private void OnDestroy()

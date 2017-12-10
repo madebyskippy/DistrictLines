@@ -37,7 +37,7 @@ public class LevelLoader : MonoBehaviour
         }
         else if(lvlDimension.x == 8)
         {
-            lvlDimension = new Vector2(10.0f, 8);
+            lvlDimension = new Vector2(12.0f, 8);
         }
 
 		//it's camera size = 11 for 16x16 map

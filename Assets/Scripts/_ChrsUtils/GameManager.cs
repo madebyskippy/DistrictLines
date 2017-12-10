@@ -8,7 +8,7 @@ public enum EasyLevels { RECTANGLE, CROSS, DONUT, L, CHECKER, CORNER}
 
 public class GameManager : MonoBehaviour
 {
-
+    public bool saved;
     public bool savePreviousScene { get; private set; }
     public bool finishedTutorial { get; private set; }
     public Dictionary<EasyLevels, bool> completedEasyLevels;
@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
 	void Update ()
     {
         Services.InputManager.Update();
-
+        saved = savePreviousScene;
 	    if(Input.GetKeyDown(restartPrototype))
         {
             RestartPrototype();

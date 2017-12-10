@@ -12,7 +12,7 @@ public class VotingSceneScript : Scene<TransitionData>
 
 	internal override void OnExit()
 	{
-        Services.GameManager.PrepareToSaveScene();
+        
     }
 
     public void PlayAgain()

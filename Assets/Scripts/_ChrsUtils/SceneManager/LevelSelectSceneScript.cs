@@ -65,7 +65,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         {
             ToggleLevelButtons(hardLevels, true);
         }
-
+        Services.GameManager.PrepareToSaveScene();
     }
 
     private void ToggleLevelButtons(Button[] buttonArray, bool interactable)
