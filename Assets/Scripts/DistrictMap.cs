@@ -61,7 +61,7 @@ public class DistrictMap : MonoBehaviour {
         numDistricts = LM.getNumDistricts ();
 		districtColors = LM.getColors ();
 
-        if(LM.currentLevel.Contains("Tutorial"))
+        if(LM.currentLevel.Contains("Tutorial1"))
         {
             tutorialPanel = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
             //tutorialPanel.gameObject.SetActive(false); 

@@ -17,6 +17,8 @@ public class LevelSelectSceneScript : Scene<TransitionData>
     [SerializeField] private Text feedback;
 	[SerializeField] private ScoreType scoreType;
 
+    [SerializeField] private Button tutorial2;
+    [SerializeField] private Button tutorial3;
     [SerializeField] private Button[] easyLevels;
     [SerializeField] private Button[] hardLevels;
 
@@ -30,6 +32,8 @@ public class LevelSelectSceneScript : Scene<TransitionData>
 
         //start it out with some defaults
         HARD_MODE_GATE = 3;
+        tutorial2 = GameObject.Find("4square").GetComponent<Button>();
+        tutorial3 = GameObject.Find("5square").GetComponent<Button>();
         easyLevels = PopulateButtonArray("Easy");
         hardLevels = PopulateButtonArray("Hard");
 
@@ -40,7 +44,11 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         moveScoreSelector(GameObject.Find("well represented").GetComponent<Button>());
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
-		if (!Services.GameManager.finishedTutorial)
+
+        ToggleTutorialLevel(tutorial2, Services.GameManager.finishedTutorial1);
+        ToggleTutorialLevel(tutorial3, Services.GameManager.finishedTutorial2);
+
+        if (!Services.GameManager.finishedTutorial3)
         {
             ToggleLevelButtons(easyLevels, false);
         }
@@ -67,6 +75,18 @@ public class LevelSelectSceneScript : Scene<TransitionData>
             ToggleLevelButtons(hardLevels, true);
         }
         Services.GameManager.PrepareToSaveScene();
+    }
+
+    private void ToggleTutorialLevel(Button button, bool isFinished)
+    {
+        if (isFinished)
+        {
+            button.interactable = true;
+        }
+        else
+        {
+            button.interactable = false;
+        }
     }
 
     private void ToggleLevelButtons(Button[] buttonArray, bool interactable)

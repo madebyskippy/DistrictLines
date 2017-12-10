@@ -9,6 +9,8 @@ TagManager:
   - Hard
   - Tutorial
   - HoverSpot
+  - Tutorial4x4
+  - Tutorial5x5
   layers:
   - Default
   - TransparentFX

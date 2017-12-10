@@ -103,10 +103,20 @@ public class votingManager : MonoBehaviour {
 			if (levelText.Equals("TUTORIAL1"))
             {
 				Debug.Log ("setting tutorial finished as true");
-                Services.GameManager.SetFinishedTutorial(true);
+                Services.GameManager.SetFinishedTutorial1(true);
+            }
+            if (levelText.Equals("TUTORIAL2"))
+            {
+                Debug.Log("setting tutorial finished as true");
+                Services.GameManager.SetFinishedTutorial2(true);
+            }
+            if (levelText.Equals("TUTORIAL3"))
+            {
+                Debug.Log("setting tutorial finished as true");
+                Services.GameManager.SetFinishedTutorial3(true);
             }
 
-            foreach(EasyLevels level in Enum.GetValues(typeof(EasyLevels)))
+            foreach (EasyLevels level in Enum.GetValues(typeof(EasyLevels)))
             {
                 string levelString = level.ToString();
                 if (levelString.Equals(levelText))

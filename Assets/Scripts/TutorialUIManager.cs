@@ -31,7 +31,7 @@ public class TutorialUIManager : MonoBehaviour
             hoverSpots.Add(hoverSpot.GetComponent<TutorialText>());
         }
 
-        if (!TransitionData.Instance.lvl.Contains("Tutorial"))
+        if (!TransitionData.Instance.lvl.Contains("Tutorial1"))
         {
             isStart = false;
             gameObject.SetActive(false);

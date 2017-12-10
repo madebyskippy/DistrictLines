@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
 {
     public bool saved;
     public bool savePreviousScene { get; private set; }
-    public bool finishedTutorial { get; private set; }
+    public bool finishedTutorial1 { get; private set; }
+    public bool finishedTutorial2 { get; private set; }
+    public bool finishedTutorial3 { get; private set; }
     public Dictionary<EasyLevels, bool> completedEasyLevels;
 
     public KeyCode restartPrototype = KeyCode.R;
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         completedEasyLevels = new Dictionary<EasyLevels, bool>();
 
-        finishedTutorial = false;
+        finishedTutorial1 = false;
         PopulateDictionary();
         NumPlayers = 1;
         _mainCamera = Camera.main;
@@ -73,9 +75,19 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("prototype");
     }
 
-    public void SetFinishedTutorial(bool isFinished)
+    public void SetFinishedTutorial1(bool isFinished)
     {
-        finishedTutorial = isFinished;
+        finishedTutorial1 = isFinished;
+    }
+
+    public void SetFinishedTutorial2(bool isFinished)
+    {
+        finishedTutorial2 = isFinished;
+    }
+
+    public void SetFinishedTutorial3(bool isFinished)
+    {
+        finishedTutorial3 = isFinished;
     }
 
     public void PrepareToSaveScene()
