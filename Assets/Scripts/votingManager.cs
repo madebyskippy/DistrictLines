@@ -153,7 +153,7 @@ public class votingManager : MonoBehaviour {
 		float group2distribution = ratios[1];
 		//round it to the closest % with the numdistricts
 		//this is how many districts they SHOULD get
-		int group1district = (int)Mathf.Floor(group1distribution * numDistricts);
+		int group1district = (int)Mathf.Round(group1distribution * numDistricts);
         int group2district = numDistricts - group1district;
 
 
@@ -173,11 +173,11 @@ public class votingManager : MonoBehaviour {
 			pop_minority = 0;
 		}
 
-		if (pop_minority == 0) {
-			detailedFeedback.text = "Circle should've won more districts than Triangle.";
-		} else {
-			detailedFeedback.text = "Triangle should've won more districts than Circle.";
-		}
+//		if (pop_minority == 0) {
+//			detailedFeedback.text = "Circle should've won more districts than Triangle.";
+//		} else {
+//			detailedFeedback.text = "Triangle should've won more districts than Circle.";
+//		}
 		return (result_minority != pop_minority);
 	}
 
@@ -190,13 +190,13 @@ public class votingManager : MonoBehaviour {
 
 //		feedbackText.text += "\nthe majority should have gotten " + pop_majority + " representatives,\nthey got " + result_majority + " representatives.";
 
-		if (totalPopulation [0] > totalPopulation [1]) {
-			detailedFeedback.text = "Circle should have gotten 3 districts.";
-		} else if (totalPopulation [0] < totalPopulation [1]) {
-			detailedFeedback.text = "Triangle should have gotten 3 districts.";
-		} else {
-			detailedFeedback.text = "The populations were equal! No majority.";
-		}
+//		if (totalPopulation [0] > totalPopulation [1]) {
+//			detailedFeedback.text = "Circle should have gotten 3 districts.";
+//		} else if (totalPopulation [0] < totalPopulation [1]) {
+//			detailedFeedback.text = "Triangle should have gotten 3 districts.";
+//		} else {
+//			detailedFeedback.text = "The populations were equal! No majority.";
+//		}
 
 		if (pop_majority >= numDistricts) {
 			return (result_majority == pop_majority);
