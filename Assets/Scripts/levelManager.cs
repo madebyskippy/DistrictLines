@@ -16,7 +16,7 @@ public class levelManager : MonoBehaviour {
 	int map;
 	int numDistricts;
 
-	int[] totalPopulation; //0th index is for group 1, 1st index is for group 2
+	int[] totalPopulation = new int[2]; //0th index is for group 1, 1st index is for group 2
 	Vector2[] districtMakeup;
 
 	int[] districtPopulation;
@@ -63,15 +63,32 @@ public class levelManager : MonoBehaviour {
 	//for the map phase, so user knows what to aim for
 	public string getInstructions(){
 		string instruc = "";
+		string majority = "Triangle";
+		string minority = "Circle";
+		if (totalPopulation [0] > totalPopulation [1]) {
+			majority = "Circle";
+			minority = "Triange";
+		}
+		float ratio = (float)totalPopulation [0] / (float)(totalPopulation [0] + totalPopulation [1]);
 		switch (scoreType) {
 		case 0:
-			instruc = "Represent the population accurately.";
+			instruc = "Be fair!\n";
+			int circDistrict = (int)Mathf.Round (ratio * 3f);
+			Debug.Log ((ratio*3f)+","+circDistrict);
+			if (circDistrict == 0 || circDistrict == 3) {
+				instruc += majority + " should get 3 districts.";
+			} else {
+				instruc += majority+" should get 2 districts,\n";
+				instruc += minority+" should get 1 district.";
+			}
 			break;
 		case 1:
-			instruc = "Make sure the minority group gets more districts.";
+			instruc = "Turn the tables!\n";
+			instruc += "Make sure "+minority+" gets 2 or more districts.";
 			break;
 		case 2:
-			instruc = "Have the majority get more districts than it deserves.";
+			instruc = "Leave no openings.\n";
+			instruc += "Make sure "+majority+" gets 3 districts.";
 			break;
 		}
 		return instruc;
