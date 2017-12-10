@@ -36,6 +36,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         setDimensions ("3");
 		setLevel ("Tutorial1");
 		setScoreType (0);
+        moveMapSelector(GameObject.Find("3square").GetComponent<Button>());
         moveScoreSelector(GameObject.Find("well represented").GetComponent<Button>());
         feedback = GameObject.Find("FeedbackText").GetComponent<Text>();
         feedback.text = "";
