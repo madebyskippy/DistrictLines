@@ -108,7 +108,7 @@ public class LevelLoader : MonoBehaviour
                 {
                     Vector2 pos = new Vector2(x, y);
                     if(districtMap.gridCoordinates[x, y] != null && 
-                       districtMap.gridCoordinates[x,y].getTotalPopulation() < 3)
+                       districtMap.gridCoordinates[x,y].getTotalPopulation() < 2)
                     {
                         int newTrianglePartyPopulation = 0;
                         int newCirclePopultion = 2;

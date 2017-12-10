@@ -92,10 +92,6 @@ public class County : MonoBehaviour {
 					}
 
                 } else {
-                    if (totalInCounty == 0)
-                    {
-                        Destroy(clump);
-                    }
                     break;
 				}
 			}
