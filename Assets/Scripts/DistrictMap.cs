@@ -37,8 +37,8 @@ public class DistrictMap : MonoBehaviour {
     [SerializeField] TutorialUIManager tutorialPanel;
 
 	//list of all the game spaces
-	List<County> allCounties;
-    County[,] gridCoordinates;
+	public List<County> allCounties = new List<County>();
+    public County[,] gridCoordinates;
 
 	//keeps track of how many people for each group in each district.
 	//e.g. districtMakeup[(int)PoliticalParty.Circle][0] is how many people are in group A in district 1.
@@ -94,7 +94,6 @@ public class DistrictMap : MonoBehaviour {
         rows = (int)TransitionData.Instance.dimensions.x;
         cols = (int)TransitionData.Instance.dimensions.y;
 
-        allCounties = new List<County> ();
         gridCoordinates = new County[rows, cols];
 
         indicators [0].SetActive (true);
@@ -109,7 +108,6 @@ public class DistrictMap : MonoBehaviour {
 
     private void SetIndicators()
     {
-        Debug.Log("HoHoHo");
         for(int i = 0; i < numDistricts; i++)
         {
             indicators[i] = GameObject.Find("Indicator " + (i + 1)).GetComponent<DistrictIndicator>();
@@ -165,6 +163,16 @@ public class DistrictMap : MonoBehaviour {
         allCounties.Add(county);
     }
 
+    public County GetCounty(Vector2 pos)
+    {
+        foreach(County county in allCounties)
+        {
+            if (county.gridPos == pos)
+                return county;
+        }
+        return null;
+    }
+
     public bool CoordIsWithinBounds(Vector2 coord)
     {
         return coord.x >= 0 && coord.x < cols && coord.y >= 0 && coord.y < rows;
@@ -184,10 +192,22 @@ public class DistrictMap : MonoBehaviour {
         return numOfCounties;
     }
 
-    public void setCountyPopulation(int[] population)
+    public void setCountyPopulation()
     {
-        totalPopulation[(int)PoliticalParty.CIRCLE] += population[(int)PoliticalParty.CIRCLE];
-		totalPopulation[(int)PoliticalParty.TRIANGLE] += population[(int)PoliticalParty.TRIANGLE];
+        int totalCircle = 0;
+        int totalTriangle = 0;
+        foreach (County county in allCounties)
+        {
+            totalCircle += county.getCirclePatyPopulation();
+            totalTriangle += county.getTrianglePartyPopulation();
+        }
+
+        int[] population = new int[] { totalCircle, totalTriangle };
+
+
+
+        totalPopulation[(int)PoliticalParty.CIRCLE] = population[(int)PoliticalParty.CIRCLE];
+		totalPopulation[(int)PoliticalParty.TRIANGLE] = population[(int)PoliticalParty.TRIANGLE];
 
 		stats.text = "" + totalPopulation [(int)PoliticalParty.CIRCLE];
 		stats.text += "\n" + totalPopulation [(int)PoliticalParty.TRIANGLE];
@@ -199,14 +219,13 @@ public class DistrictMap : MonoBehaviour {
     public void SetMaxPopulationDifference()
     {
         //  Display this on the screen
-        MAX_POPULATION_DIFFERENCE = Mathf.RoundToInt((totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]) * 0.05f);
+        MAX_POPULATION_DIFFERENCE = Mathf.RoundToInt((totalPopulation[(int)PoliticalParty.CIRCLE] + totalPopulation[(int)PoliticalParty.TRIANGLE]) * 0.05f) + 1;
     }
 
     public void SetGridCoordinates(Vector2 coord, County county)
     {
         if (coord.x < 0 || coord.y < 0) return;
         if (coord.x > rows - 1 || coord.y > cols - 1) return;
-
         gridCoordinates[(int)coord.x, (int)coord.y] = county;
     }
 
@@ -273,6 +292,19 @@ public class DistrictMap : MonoBehaviour {
                 population += county.getTrianglePartyPopulation();
         }
         return population;
+    }
+
+    public bool PopulationsAreEqual()
+    {
+        int totalCircle = 0;
+        int totalTriangle = 0;
+        foreach (County county in allCounties)
+        {
+            totalCircle += county.getCirclePatyPopulation();
+            totalTriangle += county.getTrianglePartyPopulation();
+        }
+
+        return totalCircle == totalTriangle;
     }
 
     public bool AllDistrictsContinuityCheck()
@@ -482,7 +514,6 @@ public class DistrictMap : MonoBehaviour {
                         objectHit.setColor(districtColors[currentDistrict]);
                         districtMakeup[currentDistrict] = new Vector2(districtMakeup[currentDistrict].x + objectHit.getCirclePatyPopulation(),
                                                                         districtMakeup[currentDistrict].y + objectHit.getTrianglePartyPopulation());
-                        Debug.Log("District " + (currentDistrict + 1) + ": " + districtMakeup[currentDistrict]);
                         UpdatePopulations();
                         feedback.text = "";
                     }

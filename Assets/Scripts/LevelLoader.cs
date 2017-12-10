@@ -89,13 +89,45 @@ public class LevelLoader : MonoBehaviour
                     space.setTrianglePartyPopulation((totalInArea - firstGroup));
 
                     districtMap.AddGridSpaceToMap(space);
+                    districtMap.setCountyPopulation();
                     districtMap.SetGridCoordinates(new Vector2(x, y), space);
-                    districtMap.setCountyPopulation(new int[] { firstGroup, (totalInArea - firstGroup) });
                     districtMap.SetMaxPopulationDifference();
                 }
                 else
                 {
                     //  Do something else or nothing
+                }
+            }
+        }
+
+        if(districtMap.PopulationsAreEqual())
+        {
+            for (int x = 0; x < lvlDimension.x; x++)
+            {
+                for (int y = 0; y < lvlDimension.y; y++)
+                {
+                    Vector2 pos = new Vector2(x, y);
+                    if(districtMap.gridCoordinates[x, y] != null && 
+                       districtMap.gridCoordinates[x,y].getTotalPopulation() < 3)
+                    {
+                        int newTrianglePartyPopulation = 0;
+                        int newCirclePopultion = 2;
+
+                        
+                        districtMap.gridCoordinates[x, y].setCirclePartyPopulation(0);
+                        districtMap.gridCoordinates[x, y].setTrianglePartyPopulation(0);
+
+                        districtMap.gridCoordinates[x, y].setGroups(0, 0);
+                        Destroy(districtMap.gridCoordinates[x, y].gameObject.transform.Find("New Game Object").gameObject);
+
+
+                        districtMap.gridCoordinates[x, y].setGroups(newCirclePopultion, newTrianglePartyPopulation);
+
+                        districtMap.gridCoordinates[x, y].setCirclePartyPopulation(newCirclePopultion);
+                        districtMap.gridCoordinates[x, y].setTrianglePartyPopulation(newTrianglePartyPopulation);
+                        districtMap.setCountyPopulation();
+                        return;
+                    }
                 }
             }
         }

@@ -21,6 +21,7 @@ public class PrototypeSceneScript : Scene<TransitionData>
             districtMap.Init();
             Services.LevelLoader.setDistrictMap(districtMap);
             Services.LevelLoader.loadLevel(TransitionData.Instance.lvl, TransitionData.Instance.dimensions);
+            ValidateMap();
             Services.GameManager.SaveScene();
         }
     }
@@ -29,6 +30,29 @@ public class PrototypeSceneScript : Scene<TransitionData>
     {
 
     }
+
+    private void ValidateMap()
+    {
+        if (districtMap.PopulationsAreEqual())
+        {
+            for (int x = 0; x < TransitionData.Instance.dimensions.x; x++)
+            {
+                for (int y = 0; y < TransitionData.Instance.dimensions.y; y++)
+                {
+                    Vector2 pos = new Vector2(x, y);
+
+                    if (districtMap.GetCounty(pos).getTotalPopulation() < 3)
+                    {
+                        districtMap.GetCounty(pos).setCirclePartyPopulation
+                            (districtMap.GetCounty(pos).getCirclePatyPopulation() + 1
+                            );
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public void ToLevelSelect()
     {
         Services.GameManager.PrepareToSaveScene();

@@ -54,11 +54,12 @@ public class County : MonoBehaviour {
 		//ceiling the square root to get the cols/rows and then place them
 		int totalInCounty = partyCount [0] + partyCount [1];
 		int cols = (int)Mathf.Ceil(Mathf.Sqrt(totalInCounty));
+        GameObject clump = null;
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (i * cols + j < partyCount [0] + partyCount [1]) {
 					//I could make a prefab but I just did all the gameobject settings here
-					GameObject clump = new GameObject ();
+					clump = new GameObject ();
 					SpriteRenderer sr = clump.AddComponent<SpriteRenderer> ();
 					sr.color = Color.grey;
 					sr.sortingOrder = 1;
@@ -90,8 +91,12 @@ public class County : MonoBehaviour {
 						clump.transform.localPosition = new Vector3 (-0.175f * (cols - 1f) + i * 0.35f, 0f, -0.175f * (cols - 1f) + j * 0.35f);
 					}
 
-				} else {
-					break;
+                } else {
+                    if (totalInCounty == 0)
+                    {
+                        Destroy(clump);
+                    }
+                    break;
 				}
 			}
 		}
