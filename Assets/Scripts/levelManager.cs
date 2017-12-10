@@ -74,7 +74,6 @@ public class levelManager : MonoBehaviour {
 		case 0:
 			instruc = "Be fair!\n";
 			int circDistrict = (int)Mathf.Round (ratio * 3f);
-			Debug.Log ((ratio*3f)+","+circDistrict);
 			if (circDistrict == 0 || circDistrict == 3) {
 				instruc += majority + " should get 3 districts.";
 			} else {

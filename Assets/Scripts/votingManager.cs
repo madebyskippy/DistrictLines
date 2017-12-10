@@ -10,11 +10,13 @@ public class votingManager : MonoBehaviour {
 	[SerializeField] Sprite[] resultReactions;
 	[SerializeField] GameObject districtHeader;
 	[SerializeField] GameObject UICanvas;
+	[SerializeField] GameObject indicatorHolder;
 
 	[SerializeField] Text populationData;
 	[SerializeField] Text resultText;
 	[SerializeField] Image resultReaction;
-	[SerializeField] Text[] feedbackText;
+	[SerializeField] Text[] feedbackPercentageText;
+	[SerializeField] Text[] feedbackDistrictsText;
 	[SerializeField] Text goalText;
 	[SerializeField] Text detailedFeedback;
 
@@ -43,15 +45,15 @@ public class votingManager : MonoBehaviour {
 		districtColors = LM.getColors ();
 
 		populationData.text = totalPopulation [0] + "\n" + totalPopulation [1];
-		goalText.text = "GOAL: "+ LM.getInstructions ();
+		goalText.text = LM.getInstructions ();
 
 		for (int i = 0; i < numDistricts; i++)
 		{
 
 			GameObject indicator = Instantiate (districtDataPrefab);
 
-			indicator.transform.position = new Vector3 (50f, 150f + (75f * (numDistricts - 1)) - 75f * i, 0f);
-			indicator.transform.SetParent (UICanvas.transform,false);
+			indicator.transform.position = new Vector3 (50f, 225f + (75f * (numDistricts - 1)) - 75f * i, 0f);
+			indicator.transform.SetParent (indicatorHolder.transform, false);
 			DistrictData indicatorData = indicator.GetComponent<DistrictData>();
 			indicatorData.setDistrict(districtColors[i],i+1);
 
@@ -68,6 +70,7 @@ public class votingManager : MonoBehaviour {
 		}
 
 		//hardcoded--again bad programming sorry
+		//but also not using it sooo
 		districtHeader.gameObject.transform.position = new Vector3 (50f,150+75f*(numDistricts-1)+90f, 0f);
 	}
 
@@ -75,8 +78,10 @@ public class votingManager : MonoBehaviour {
 		districtCount = getDistrictCount ();
 
 		float[] ratio = groupPercentages ();
-		feedbackText[0].text = "" + Mathf.Round(ratio[0]*100) + "% of the population\nreceived "+districtCount[0]+" districts.";
-		feedbackText[1].text = "" + Mathf.Round(ratio[1]*100) + "% of the population\nreceived "+districtCount[1]+" districts.";
+		feedbackPercentageText[0].text = "" + Mathf.Round(ratio[0]*100) + "%";
+		feedbackPercentageText[1].text = "" + Mathf.Round(ratio[1]*100) + "%";
+		feedbackDistrictsText[0].text = "" + districtCount[0]+" districts";
+		feedbackDistrictsText[1].text = "" + districtCount[1]+" districts";
 
 		switch (i) {
 		case 0:
@@ -91,7 +96,7 @@ public class votingManager : MonoBehaviour {
 		}
 
 		if (isResultGood) {
-			resultText.text = "Nice job reaching your goal!";
+			resultText.text = "Nice job!";
 			resultReaction.sprite = resultReactions [0];
 
             string levelText = TransitionData.Instance.lvl.ToUpper();
@@ -113,7 +118,7 @@ public class votingManager : MonoBehaviour {
 
 		} else {
 			resultReaction.sprite = resultReactions [1];
-			resultText.text = "Hmm, maybe try again?";
+			resultText.text = "Try again?";
 		}
 	}
 

@@ -18,6 +18,19 @@ public class LevelLoader : MonoBehaviour
     }
 
 	private void adjustCamera(Vector2 lvlDimension){
+
+		//it's camera y position = 7 for 16x16 map
+		//camera y position = 3.5 for 8x8 map
+		//the y = mx + b is y = (3.5/8)x + 0
+
+		//it's camera x position = 0 for 16x16
+		//camera x position = -2.5 for 3x3 map
+		//the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
+
+		Vector3 oldPos = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
+
+
         if (lvlDimension.x < 8)
         {
             lvlDimension = new Vector2(8.0f, 3);
@@ -29,12 +42,6 @@ public class LevelLoader : MonoBehaviour
 
 		//it's camera size = 11 for 16x16 map
 		Camera.main.orthographicSize = (int)(11 * (float)((float)lvlDimension.x/(float)16));
-
-		//it's camera y position = 7 for 16x16 map
-		//camera y position = 3.5 for 8x8 map
-		//the y = mx + b is y = (3.5/8)x + 0
-		Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (oldPos.x, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
 	}
 
     public void loadLevel(string lvl, Vector2 lvlDimension)

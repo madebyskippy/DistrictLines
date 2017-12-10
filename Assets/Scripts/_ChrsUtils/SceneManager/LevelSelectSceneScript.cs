@@ -33,7 +33,7 @@ public class LevelSelectSceneScript : Scene<TransitionData>
         easyLevels = PopulateButtonArray("Easy");
         hardLevels = PopulateButtonArray("Hard");
 
-        setDimensions ("5");
+        setDimensions ("3");
 		setLevel ("Tutorial1");
 		setScoreType (0);
 

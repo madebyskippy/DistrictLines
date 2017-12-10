@@ -61,6 +61,7 @@ public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	}
 
 	public void closeTutorial(){
+		GetComponent<Image> ().raycastTarget = false;
 		display.SetActive (false);
 		manager.ShowTutorialPanel (null);
 	}
