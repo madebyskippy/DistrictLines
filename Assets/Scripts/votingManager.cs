@@ -100,7 +100,6 @@ public class votingManager : MonoBehaviour {
 			resultReaction.sprite = resultReactions [0];
 
             string levelText = TransitionData.Instance.lvl.ToUpper();
-			Debug.Log (levelText);
 			if (levelText.Equals("TUTORIAL1"))
             {
 				Debug.Log ("setting tutorial finished as true");
@@ -127,7 +126,7 @@ public class votingManager : MonoBehaviour {
 		int group2=0;
 		int tie = 0;
 		for (int i = 0; i < numDistricts; i++) {
-            Debug.Log(districtMakeup[i]);
+            Debug.Log("District " + (i + 1) + " :" + districtMakeup[i]);
             if (districtMakeup[i].x > districtMakeup[i].y) {
                 
 				group1++;

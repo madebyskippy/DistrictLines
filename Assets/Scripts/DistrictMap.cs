@@ -58,13 +58,13 @@ public class DistrictMap : MonoBehaviour {
 	public void Init ()
     {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
-        tutorialPanel = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
         numDistricts = LM.getNumDistricts ();
 		districtColors = LM.getColors ();
 
-        if(!LM.currentLevel.Contains("Tutorial"))
+        if(LM.currentLevel.Contains("Tutorial"))
         {
-            tutorialPanel.gameObject.SetActive(false); 
+            tutorialPanel = GameObject.Find("TutorialPanel").GetComponent<TutorialUIManager>();
+            //tutorialPanel.gameObject.SetActive(false); 
         }
 
         //start keeping track of the districts.
@@ -482,7 +482,7 @@ public class DistrictMap : MonoBehaviour {
                         objectHit.setColor(districtColors[currentDistrict]);
                         districtMakeup[currentDistrict] = new Vector2(districtMakeup[currentDistrict].x + objectHit.getCirclePatyPopulation(),
                                                                         districtMakeup[currentDistrict].y + objectHit.getTrianglePartyPopulation());
-//                        Debug.Log(districtMakeup[currentDistrict]);
+                        Debug.Log("District " + (currentDistrict + 1) + ": " + districtMakeup[currentDistrict]);
                         UpdatePopulations();
                         feedback.text = "";
                     }

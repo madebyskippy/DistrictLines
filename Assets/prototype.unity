@@ -360,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b1f16f518294ca499f9e6daf116646f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saved: 0
   restartPrototype: 114
   _numPlayers: 0
   _mainCamera: {fileID: 0}

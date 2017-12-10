@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 
-public enum EasyLevels { RECTANGLE, CROSS, DONUT, L, CHECKER, CORNER}
+public enum EasyLevels { RECTANGLE, SQAURE, DONUT, CORNER, BLOP, C, FISH}
 
 public class GameManager : MonoBehaviour
 {

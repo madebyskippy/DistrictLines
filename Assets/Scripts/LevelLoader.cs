@@ -19,26 +19,32 @@ public class LevelLoader : MonoBehaviour
 
 	private void adjustCamera(Vector2 lvlDimension){
 
-		//it's camera y position = 7 for 16x16 map
-		//camera y position = 3.5 for 8x8 map
-		//the y = mx + b is y = (3.5/8)x + 0
+        //it's camera y position = 7 for 16x16 map
+        //camera y position = 3.5 for 8x8 map
+        //the y = mx + b is y = (3.5/8)x + 0
 
-		//it's camera x position = 0 for 16x16
-		//camera x position = -2.5 for 3x3 map
-		//the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
-
-		Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
+        //it's camera x position = 0 for 16x16
+        //camera x position = -2.5 for 3x3 map
+        //the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
 
 
         if (lvlDimension.x < 8)
         {
-            lvlDimension = new Vector2(8.0f, 3);
+            lvlDimension = new Vector2(10.0f, 3);
         }
-        else if(lvlDimension.x == 8)
+        else if (lvlDimension.x == 8)
         {
             lvlDimension = new Vector2(12.0f, 8);
         }
+        else
+        {
+            lvlDimension = new Vector2(19.0f, 16);
+        }
+        Vector3 oldPos = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
+
+
+       
 
 		//it's camera size = 11 for 16x16 map
 		Camera.main.orthographicSize = (int)(11 * (float)((float)lvlDimension.x/(float)16));

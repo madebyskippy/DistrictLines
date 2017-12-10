@@ -35,11 +35,6 @@ public class DistrictIndicator : MonoBehaviour
 		isActive = false;
 	}
 
-    private void OnDestroy()
-    {
-        Debug.Log("NOPE");
-    }
-
     public void setDistrictMap(DistrictMap dm){
 		districtMap = dm;
 	}
@@ -144,7 +139,6 @@ public class DistrictIndicator : MonoBehaviour
 
     public void SetTotalPopulationText(int population, int fontSize, Color color)
     {
-        Debug.Log(poptext);
         if(poptext == null)
         {
             poptext = transform.Find("population count").Find("population text").GetComponent<Text>();

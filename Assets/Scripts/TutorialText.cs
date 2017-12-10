@@ -40,7 +40,6 @@ public class TutorialText : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
 		if (isActive) {
 			if (!hasShown) {
-				Debug.Log ("Show");
 				manager.ShowTutorialPanel (this);
 			}
 		}

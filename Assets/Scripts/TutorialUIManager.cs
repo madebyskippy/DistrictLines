@@ -18,6 +18,8 @@ public class TutorialUIManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        
+
 //		tutorialPanel = GetComponent<Image>();
 		isStart = true;
         tutorialText = GetComponentInChildren<Text>();
@@ -28,8 +30,18 @@ public class TutorialUIManager : MonoBehaviour
         {
             hoverSpots.Add(hoverSpot.GetComponent<TutorialText>());
         }
-		
-	}
+
+        if (!TransitionData.Instance.lvl.Contains("Tutorial"))
+        {
+            isStart = false;
+            gameObject.SetActive(false);
+            foreach(TutorialText hoverspot in hoverSpots)
+            {
+                hoverspot.gameObject.SetActive(false);
+            }
+        }
+
+    }
 
     private void SetTutorialText(string text)
     {
