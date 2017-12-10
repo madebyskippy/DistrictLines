@@ -501,8 +501,8 @@ public class DistrictMap : MonoBehaviour {
         //this is for UI display
         for (int i = 0; i < numDistricts; i++)
         {
-			int circlePopulation = GetDistrictCircleCounty(i);
-			int trianglePopulation = GetDistrictTriangleCounty(i);
+			int circlePopulation = GetDistrictCirclePopulation(i);
+			int trianglePopulation = GetDistrictTrianglePopulation(i);
             indicators[i].SetPopulationBar(circlePopulation, trianglePopulation);
             int population = GetDistrictTotalPopulation(i);
             indicators[i].SetTotalPopulationText(population);

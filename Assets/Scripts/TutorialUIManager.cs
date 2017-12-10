@@ -13,12 +13,13 @@ public class TutorialUIManager : MonoBehaviour
 
 	TutorialText currentTutorial;
 
+	bool isStart; //for whether it's the starting one that's visible when you just open up the page and not dependant on hover
+
 	// Use this for initialization
 	void Start ()
     {
 //		tutorialPanel = GetComponent<Image>();
-		tutorialPanel = transform.GetChild (1).GetComponent<Image> ();
-		tutorialPanelShadow = transform.GetChild (0).GetComponent<Image> ();
+		isStart = true;
         tutorialText = GetComponentInChildren<Text>();
 
         GameObject[] hoverSpotsGameObjects = GameObject.FindGameObjectsWithTag("HoverSpot");
@@ -39,6 +40,7 @@ public class TutorialUIManager : MonoBehaviour
     {
         if (hoverSpot != null)
         {
+			isStart = false;
 			if (currentTutorial == null) {
 				transform.localScale = Vector3.one;
 				SetTutorialText (hoverSpot.GetText ());
@@ -62,6 +64,11 @@ public class TutorialUIManager : MonoBehaviour
 		if (currentTutorial != null) {
 			currentTutorial.closeTutorial ();
 			currentTutorial = null;
+		}
+
+		if (isStart) {
+			isStart = false;
+			ShowTutorialPanel (null);
 		}
 	}
 }
