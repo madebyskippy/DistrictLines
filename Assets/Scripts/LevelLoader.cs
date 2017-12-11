@@ -25,10 +25,7 @@ public class LevelLoader : MonoBehaviour
 
         //it's camera x position = 0 for 16x16
         //camera x position = -2.5 for 3x3 map
-		//the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
-
-		Vector3 oldPos = Camera.main.transform.position;
-		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
+        //the y = mx + b is y = (2.5 / (16-3))x + 16 * (2.5 / (16-3))
 
 
         if (lvlDimension.x < 8)
@@ -43,6 +40,12 @@ public class LevelLoader : MonoBehaviour
         {
             lvlDimension = new Vector2(19.0f, 16);
         }
+
+        Vector3 oldPos = Camera.main.transform.position;
+		Camera.main.transform.position = new Vector3 (0.1923f*lvlDimension.x - 3.077f, oldPos.y, (float)(3.5f/8f)*lvlDimension.y + 0f);
+
+
+        
 
 
        
@@ -67,36 +70,70 @@ public class LevelLoader : MonoBehaviour
         {
             for (int y = 0; y < lvlDimension.y; y++)
             {
-                if (textureMap.GetPixel(x, y) != Color.white)
+                Color pixelColor = textureMap.GetPixel(x,y);
+                if (pixelColor != Color.white)
                 {
-                    //  Do something or nothing
                     County space = Instantiate(districtMap.GetCountryPrefab(), new Vector3(x, 0, y), Quaternion.identity).GetComponent<County>();
                     space.transform.parent = Services.Scenes.CurrentScene.transform;
                     space.name = "County: " + x + ", " + y;
-                    int totalInArea = Random.Range(1, 4); //total of 5 "people"
-                    int firstGroup = Random.Range(0, totalInArea);
-                    if (firstGroup == totalInArea / 2.0f)
+                    int totalInArea = 0;
+                    int circlePopulation = 0;
+
+                    Debug.Log(pixelColor);
+
+                    if (pixelColor == Color.black)
+                    {                        
+                        totalInArea = Random.Range(1, 4); //total of 5 "people"
+                        circlePopulation = Random.Range(0, totalInArea);
+                        if (circlePopulation == totalInArea / 2.0f)
+                        {
+                            //prevent ties, we can't handle them right now
+                            circlePopulation++;
+                        } 
+                    }
+                    else if (pixelColor == Color.red)
                     {
-                        //prevent ties, we can't handle them right now
-                        firstGroup++;
+                        totalInArea = 1;
+                        circlePopulation = 0;
+                    }
+                    else if (pixelColor == Color.green)
+                    {
+                        totalInArea = 1;
+                        circlePopulation = 1;
+                    }
+                    else if (pixelColor == Color.blue)
+                    {
+                        totalInArea = 2;
+                        circlePopulation = 0;
+                    }
+                    else if (pixelColor == Color.magenta)
+                    {
+                        totalInArea = 2;
+                        circlePopulation = 2;
+                    }
+                    else if (pixelColor.r > 0.5f && pixelColor.g > 0.5f && pixelColor.b < 0.5f)
+                    {
+                        totalInArea = 3;
+                        circlePopulation = 1;
+                    }
+                    else if (pixelColor == Color.cyan)
+                    {
+                        totalInArea = 3;
+                        circlePopulation = 2;
                     }
 
-                    space.setGroups(firstGroup, totalInArea - firstGroup);
+                    space.setGroups(circlePopulation, totalInArea - circlePopulation);
 
                     space.setDistrict(-1);
                     space.setGridPos(x, y);
 
-                    space.setCirclePartyPopulation(firstGroup);
-                    space.setTrianglePartyPopulation((totalInArea - firstGroup));
+                    space.setCirclePartyPopulation(circlePopulation);
+                    space.setTrianglePartyPopulation((totalInArea - circlePopulation));
 
                     districtMap.AddGridSpaceToMap(space);
                     districtMap.setCountyPopulation();
                     districtMap.SetGridCoordinates(new Vector2(x, y), space);
                     districtMap.SetMaxPopulationDifference();
-                }
-                else
-                {
-                    //  Do something else or nothing
                 }
             }
         }
