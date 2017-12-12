@@ -79,17 +79,8 @@ public class LevelLoader : MonoBehaviour
                     int totalInArea = 0;
                     int circlePopulation = 0;
 
-                    if (pixelColor == Color.black)
-                    {                        
-                        totalInArea = Random.Range(1, 4); //total of 5 "people"
-                        circlePopulation = Random.Range(0, totalInArea);
-                        if (circlePopulation == totalInArea / 2.0f)
-                        {
-                            //prevent ties, we can't handle them right now
-                            circlePopulation++;
-                        } 
-                    }
-                    else if (pixelColor == Color.red)
+                    
+                    if (pixelColor == Color.red)
                     {
                         totalInArea = 1;
                         circlePopulation = 0;
@@ -118,6 +109,16 @@ public class LevelLoader : MonoBehaviour
                     {
                         totalInArea = 3;
                         circlePopulation = 2;
+                    }
+                    else
+                    {
+                        totalInArea = Random.Range(1, 4); //total of 5 "people"
+                        circlePopulation = Random.Range(0, totalInArea);
+                        if (circlePopulation == totalInArea / 2.0f)
+                        {
+                            //prevent ties, we can't handle them right now
+                            circlePopulation++;
+                        }
                     }
 
                     space.setGroups(circlePopulation, totalInArea - circlePopulation);
