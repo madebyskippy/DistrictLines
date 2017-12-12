@@ -54,8 +54,14 @@ public class DistrictMap : MonoBehaviour {
 	//for interfacing with the other 'scenes' like the voting phase
 	levelManager LM;
 
-	// Use this for initialization
-	public void Init ()
+    private void OnEnable()
+    {
+        Services.EventManager.Register<KeyPressed>(OnKeyPressed);
+    }
+
+
+    // Use this for initialization
+    public void Init ()
     {
 		LM = GameObject.FindGameObjectWithTag ("levelManager").GetComponent<levelManager>();
         numDistricts = LM.getNumDistricts ();
@@ -103,7 +109,6 @@ public class DistrictMap : MonoBehaviour {
 		feedback.text = "";
 //        clearCurrentDistrictButton = GameObject.Find("ClearCurrentDistrictText").GetComponent<Text>();
 //        clearCurrentDistrictButton.text = "Clear " + (currentDistrict + 1);
-        Services.EventManager.Register<KeyPressed>(OnKeyPressed);
     }
 
     private void SetIndicators()

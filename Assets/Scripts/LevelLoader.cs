@@ -79,8 +79,6 @@ public class LevelLoader : MonoBehaviour
                     int totalInArea = 0;
                     int circlePopulation = 0;
 
-                    Debug.Log(pixelColor);
-
                     if (pixelColor == Color.black)
                     {                        
                         totalInArea = Random.Range(1, 4); //total of 5 "people"
