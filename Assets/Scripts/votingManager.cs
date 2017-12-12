@@ -137,8 +137,8 @@ public class votingManager : MonoBehaviour {
 		int tie = 0;
 		for (int i = 0; i < numDistricts; i++) {
             if (districtMakeup[i].x > districtMakeup[i].y) {
-                
-				group1++;
+                Debug.Log("District " + (i + 1) + ": " + districtMakeup[i]);
+                group1++;
 			} else if (districtMakeup[i].x < districtMakeup[i].y) {
 				group2++;
 			} else {

@@ -467,7 +467,8 @@ public class DistrictMap : MonoBehaviour {
         {
             for(int i = 0; i < numDistricts; i++)
             {
-                Debug.Log("District: " + i + " | Population: " + GetDistrictTotalPopulation(i));
+                //Debug.Log("District: " + i + " | Population: " + GetDistrictTotalPopulation(i));
+                Debug.Log("District " + (i + 1) + ": " + districtMakeup[i]);
             }
         }
 
@@ -512,13 +513,15 @@ public class DistrictMap : MonoBehaviour {
                         {
                             //it was previously a district, but now it's not gonna be that anymore
                             //so we lower the count
-                            districtMakeup[currentDistrict] = new Vector2(GetDistrictCirclePopulation(currentDistrict) - objectHit.getCirclePatyPopulation(),
-                                                                        GetDistrictTrianglePopulation(currentDistrict) - objectHit.getTrianglePartyPopulation());
+                            districtMakeup[prevDistrict] = new Vector2(GetDistrictCirclePopulation(prevDistrict),
+                                                                        GetDistrictTrianglePopulation(prevDistrict));
                         }
 
+
+
                         objectHit.setColor(districtColors[currentDistrict]);
-                        districtMakeup[currentDistrict] = new Vector2(districtMakeup[currentDistrict].x + objectHit.getCirclePatyPopulation(),
-                                                                        districtMakeup[currentDistrict].y + objectHit.getTrianglePartyPopulation());
+                        districtMakeup[currentDistrict] = new Vector2(GetDistrictCirclePopulation(currentDistrict),
+                                                                        GetDistrictTrianglePopulation(currentDistrict));
                         UpdatePopulations();
                         feedback.text = "";
                     }
